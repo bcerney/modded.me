@@ -20,3 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('quotes_app.urls')),
 ]
+
+urlpatterns += [
+    path('api/', include('rest_framework.urls')),
+]
