@@ -1,12 +1,14 @@
-from django.urls import path, include
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
 from quotes_app import views
 
-urlpatterns = [
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetail.as_view()),
-    path('quotes/', views.QuoteList.as_view()),
-    path('quotes/<int:pk>/', views.QuoteDetail.as_view()),
-]
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'quotes', views.QuoteViewSet)
+router.register(r'users', views.UserViewSet)
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# The API URLs are now determined automatically by the router.
+urlpatterns = [
+    path('', include(router.urls)),
+]
