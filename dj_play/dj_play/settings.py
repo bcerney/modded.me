@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     'rest_framework',
     'quotes_app.apps.QuotesAppConfig',
+
+    # django-taggit
+    # https://github.com/jazzband/django-taggit
+    'taggit',
+    'taggit_serializer',
 ]
 
 MIDDLEWARE = [
