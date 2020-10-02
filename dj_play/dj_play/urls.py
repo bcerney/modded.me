@@ -22,5 +22,5 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('api/', include('rest_framework.urls')),
+    path('api/', include('rest_framework.urls', namespace='rest_framework')),
 ]

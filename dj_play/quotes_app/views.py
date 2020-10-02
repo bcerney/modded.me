@@ -4,30 +4,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from quotes_app.models import Quote
+from quotes_app.models import Quote, Reflection
 from quotes_app.permissions import IsOwnerOrReadOnly
-from quotes_app.serializers import QuoteSerializer, UserSerializer
+from quotes_app.serializers import (QuoteSerializer, ReflectionSerializer,
+                                    UserSerializer)
 
-
-class QuoteList(generics.ListCreateAPIView):
-    queryset = Quote.objects.all()
-    serializer_class = QuoteSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
-    ]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class QuoteDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Quote.objects.all()
-    serializer_class = QuoteSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
-    ]
 
 class QuoteViewSet(viewsets.ModelViewSet):
     """
@@ -40,7 +21,21 @@ class QuoteViewSet(viewsets.ModelViewSet):
                           IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(user=self.request.user)
+
+
+class ReflectionViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+    """
+    queryset = Reflection.objects.all()
+    serializer_class = ReflectionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
