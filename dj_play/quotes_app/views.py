@@ -1,52 +1,46 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from quotes_app.models import Quote
-from quotes_app.serializers import QuoteSerializer
+from django.contrib.auth.models import User
+from rest_framework import generics, permissions, viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+from quotes_app.models import Quote, Reflection
+from quotes_app.permissions import IsOwnerOrReadOnly
+from quotes_app.serializers import (QuoteSerializer, ReflectionSerializer,
+                                    UserSerializer)
 
 
-@csrf_exempt
-def quote_list(request):
+class QuoteViewSet(viewsets.ModelViewSet):
     """
-    List all code snippets, or create a new snippet.
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
     """
-    import pdb; pdb.set_trace()
-    if request.method == 'GET':
-        quotes = Quote.objects.all()
-        serializer = QuoteSerializer(quotes, many=True)
-        return JsonResponse(serializer.data, safe=False)
+    queryset = Quote.objects.all()
+    serializer_class = QuoteSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = QuoteSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-@csrf_exempt
-def quote_detail(request, pk):
+
+class ReflectionViewSet(viewsets.ModelViewSet):
     """
-    Retrieve, update or delete a code snippet.
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
     """
-    try:
-        quote = Quote.objects.get(pk=pk)
-    except Snippet.DoesNotExist:
-        return HttpResponse(status=404)
+    queryset = Reflection.objects.all()
+    serializer_class = ReflectionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
-    if request.method == 'GET':
-        serializer = QuoteSerializer(quote)
-        return JsonResponse(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = QuoteSerializer(quote, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
 
-    elif request.method == 'DELETE':
-        quote.delete()
-        return HttpResponse(status=204)
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

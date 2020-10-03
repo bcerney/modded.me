@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     'rest_framework',
     'quotes_app.apps.QuotesAppConfig',
+
+    # django-taggit
+    # https://github.com/jazzband/django-taggit
+    'taggit',
+    'taggit_serializer',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +129,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
