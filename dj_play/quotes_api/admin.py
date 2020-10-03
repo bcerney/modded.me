@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from quotes_app.models import Quote, Reflection
+from quotes_api.models import Quote, Reflection
 
 # Register your models here.
 

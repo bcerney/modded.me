@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from quotes_app import views
+from quotes_api import views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()

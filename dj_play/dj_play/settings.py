@@ -39,10 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #DRF tutorial
+    # DRF tutorial
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     'rest_framework',
-    'quotes_app.apps.QuotesAppConfig',
+    'quotes_api.apps.QuotesApiConfig',
 
     # django-taggit
     # https://github.com/jazzband/django-taggit

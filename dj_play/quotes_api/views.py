@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from quotes_app.models import Quote, Reflection
-from quotes_app.permissions import IsOwnerOrReadOnly
-from quotes_app.serializers import (QuoteSerializer, ReflectionSerializer,
+from quotes_api.models import Quote, Reflection
+from quotes_api.permissions import IsOwnerOrReadOnly
+from quotes_api.serializers import (QuoteSerializer, ReflectionSerializer,
                                     UserSerializer)
 
 

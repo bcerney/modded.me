@@ -3,7 +3,7 @@ from rest_framework import serializers
 from taggit_serializer.serializers import (TaggitSerializer,
                                            TagListSerializerField)
 
-from quotes_app.models import Quote, Reflection
+from quotes_api.models import Quote, Reflection
 
 
 class QuoteSerializer(serializers.ModelSerializer, TaggitSerializer):
