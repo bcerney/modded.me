@@ -18,16 +18,6 @@ class Quote(models.Model):
         ordering = ['created']
 
 
-# class UserQuote(models.Model):
-#     created = models.DateTimeField(auto_now_add=True)
-#     user = models.ForeignKey('auth.User', related_name='user_quotes', on_delete=models.CASCADE)
-#     quote = models.ForeignKey('Quote', unique=True, related_name='+', on_delete=models.CASCADE)
-
-#     class Meta:
-#         ordering = ['created']
-#         # unique_together = (
-#         #     ('user', 'quote'),)
-
 class Reflection(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', related_name='reflections', on_delete=models.CASCADE)
