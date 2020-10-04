@@ -7,13 +7,13 @@ pip install -r requirements.txt
 
 django-admin startproject dj_play
 cd dj_play/
-./manage.py startapp quotes_app
+./manage.py startapp quotes_api
 
-./manage.py makemigrations quotes_app
+./manage.py makemigrations quotes_api
 ./manage.py migrate
 
 
->>> from quotes_app.serializers import QuoteSerializer
+>>> from quotes_api.serializers import QuoteSerializer
 >>> serializer = QuoteSerializer()
 >>> print(repr(serializer)
 ... )

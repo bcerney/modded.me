@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    # TODO: change /admin to something less obvious
     path('admin/', admin.site.urls),
     path('', include('quotes_app.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    # path('', include('quotes_api.urls')),
 ]
 
-urlpatterns += [
-    path('api/', include('rest_framework.urls', namespace='rest_framework')),
-]
+# urlpatterns += [
+#     path('api/', include('rest_framework.urls', namespace='rest_framework')),
+# ]

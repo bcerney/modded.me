@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 
 from taggit.managers import TaggableManager
     
@@ -14,9 +13,6 @@ class Quote(models.Model):
 
     def __str__(self):
         return f'"{self.text}" - {self.author}'
-    
-    def get_absolute_url(self):
-        return reverse('quotes_app:quote-detail', args=[self.id])
 
     class Meta:
         ordering = ['created']
@@ -31,9 +27,6 @@ class Reflection(models.Model):
 
     def __str__(self):
         return f'{self.quote} | {self.text}'
-    
-    def get_absolute_url(self):
-        return reverse('quotes_app:reflection-detail', args=[self.id])
 
     class Meta:
         ordering = ['created']
