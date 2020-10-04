@@ -39,10 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Django tutorial
+    'quotes_app.apps.QuotesAppConfig',
+
     # DRF tutorial
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     'rest_framework',
-    'quotes_api.apps.QuotesApiConfig',
+    # 'quotes_api.apps.QuotesApiConfig',
 
     # django-taggit
     # https://github.com/jazzband/django-taggit
@@ -65,7 +68,7 @@ ROOT_URLCONF = 'dj_play.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR.joinpath('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,3 +138,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+
+# auth
+# https://learndjango.com/tutorials/django-login-and-logout-tutorial
+# https://learndjango.com/tutorials/django-signup-tutorial
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from quotes_app.models import Quote, Reflection
+
+
+models = [Quote, Reflection]
+admin.site.register(models)

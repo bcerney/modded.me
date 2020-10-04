@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+
+<h1>Welcome, {{ user.username }}!</h1>
+
+<a href="{% url 'quotes_app:add-quote' %}">Add Quote</a>
+
+{% if quotes %}
+    <ul>
+    {% for quote in quotes %}
+        <li><a href="{{ quote.get_absolute_url }}">{{ quote }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No quotes available.</p>
+{% endif %}
+
+{% if reflections %}
+    <ul>
+    {% for reflection in reflections %}
+        <li><a href="{{ reflection.get_absolute_url }}">{{ reflection }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No reflections available.</p>
+{% endif %}
+
+<a href="{% url 'logout' %}">Log Out</a>
+
+{% endblock %}
