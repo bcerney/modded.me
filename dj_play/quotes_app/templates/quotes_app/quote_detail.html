@@ -1,11 +1,5 @@
 <h1>{{ quote }}</h1>
 
-{% if error_message %}
-<p><strong>{{ error_message }}</strong></p>
-{% endif %}
+<a href="{% url 'quotes_app:add-reflection' quote.id %}">Add Reflection</a>
 
-<form action="{% url 'quotes_app:quote-detail' quote.id %}" method="post"></form>
-{% csrf_token %}
 
-<input type="submit" value="Save ">
-</form>

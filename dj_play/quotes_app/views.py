@@ -26,21 +26,31 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
+class QuoteDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Quote
+    template_name = 'quotes_app/quote_detail.html'
+
+
 class QuoteCreateView(LoginRequiredMixin, generic.CreateView):
-    template_name = 'quotes_app/add_quote.html'
     form_class = QuoteCreateForm
+    template_name = 'quotes_app/add_quote.html'
     
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
 
-class QuoteDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Quote
-    template_name = 'quotes_app/quote_detail.html'
-
-
 class ReflectionDetailView(LoginRequiredMixin, generic.DetailView):
     model = Reflection
     template_name = 'quotes_app/reflection_detail.html'
+
+
+class ReflectionCreateView(LoginRequiredMixin, generic.CreateView):
+    form_class = ReflectionCreateForm
+    template_name = 'quotes_app/add_reflection.html'
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.quote = Quote.objects.get(id=self.kwargs['quote_id'])
+        return super().form_valid(form)
 

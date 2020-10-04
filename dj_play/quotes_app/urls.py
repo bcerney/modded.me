@@ -12,6 +12,8 @@ urlpatterns = [
     # quotes/
     path('quotes/<int:pk>/', views.QuoteDetailView.as_view(), name='quote-detail'),
     path('quotes/add-quote/', views.QuoteCreateView.as_view(), name='add-quote'),
+
     path('reflections/<int:pk>/', views.ReflectionDetailView.as_view(), name='reflection-detail'),
+    path('reflections/add-reflection/<int:quote_id>/', views.ReflectionCreateView.as_view(), name='add-reflection'),
 ]
 

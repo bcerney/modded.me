@@ -2,6 +2,10 @@
 
 {% block title %}Sign Up{% endblock %}
 
+{% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
 {% block content %}
   <h2>Sign up</h2>
   <form method="post">
