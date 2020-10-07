@@ -1,5 +1,18 @@
-<h1>{{ quote }}</h1>
+{% extends "base.html" %}
 
-<a href="{% url 'quotes_app:add-reflection' quote.id %}">Add Reflection</a>
+{% load bootstrap4 %}
 
+{% block content %}
 
+<blockquote class="blockquote text-center">
+  <p class="mb-0">{{ quote.text }}</p>
+  <footer class="blockquote-footer">{{ quote.author }}</footer>
+</blockquote>
+
+{% for reflection in quote.reflections.all %}
+  <p>{{ reflection }}</p>
+{% endfor %}
+
+<a class="btn btn-primary" href="{% url 'quotes_app:add-reflection' quote.id %}" role="button">Add Reflection</a>
+
+{% endblock %}

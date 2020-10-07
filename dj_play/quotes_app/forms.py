@@ -1,20 +1,32 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 
-from .models import Quote, Reflection
+from .models import Quote, Reflection, User
 
 
 class QuoteCreateForm(ModelForm):
     class Meta:
         model = Quote
-        fields = ('text', 'author', 'tags',)
+        fields = (
+            "text",
+            "author",
+            "tags",
+        )
         # fields = '__all__'
-    
+
     def __init__(self, *args, **kwargs):
         # self.user = kwargs.pop('user')
         super(QuoteCreateForm, self).__init__(*args, **kwargs)
 
+
 class ReflectionCreateForm(ModelForm):
     class Meta:
         model = Reflection
-        fields = ('text',)
+        fields = ("text",)
         # fields = '__all__'
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username",)

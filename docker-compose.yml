@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: "postgres:11"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    image: $CONTAINER_TEST_IMAGE
+    command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
