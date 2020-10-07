@@ -1,19 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Add Quote{% endblock %}
-
-{% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-{% endif %}
+{% load bootstrap4 %}
 
 {% block content %}
-  <h1>Add Quote</h1>
-   
+  <h2>Add Quote</h2>
+
   <form action="" method="post">
     {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
-    <input type="submit" value="Add Quote">
+    {% bootstrap_form form %}
+    {% buttons submit='Add' reset="Cancel" %}{% endbuttons %}
   </form>
 {% endblock %}

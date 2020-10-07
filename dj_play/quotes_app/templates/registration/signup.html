@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign Up{% endblock %}
+{% load bootstrap4 %}
 
 {% if error_message %}
   <p><strong>{{ error_message }}</strong></p>
@@ -10,7 +10,7 @@
   <h2>Sign up</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+    {% bootstrap_form form %}
+    <button class="btn btn-primary" type="submit">Sign Up</button>
   </form>
 {% endblock %}
