@@ -64,6 +64,7 @@ release-image:
 deploy:
     stage: deploy
     script:
+        - docker pull $CONTAINER_RELEASE_IMAGE
         - echo "Deployed!"
     only:
         - master
