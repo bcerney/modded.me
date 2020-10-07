@@ -10,11 +10,11 @@ install: ## Install requirements
 .PHONY: migrate
 migrate: ## Make and run migrations
 	# TODO: fix this, wasn't creating quotes_app migrations
-	# ./$(DJ_ROOT)/manage.py makemigrations
+	./$(DJ_ROOT)/manage.py makemigrations
 	./$(DJ_ROOT)/manage.py migrate
 
 .PHONY: runserver
-runserver: ## Run Django server
+runserver: migrate ## Run Django server
 	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:8000
 
 .PHONY: test

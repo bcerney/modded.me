@@ -26,7 +26,7 @@ SECRET_KEY = "v!cbnv-ftetj5ijs3^ajmb=nd=oo79pw%pr*ug3mtt4x=+eo^y"
 DEBUG = True
 
 # Needed by docker
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["0.0.0.0", "ec2-3-237-193-89.compute-1.amazonaws.com"]
 
 
 # Application definition
