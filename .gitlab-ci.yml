@@ -1,0 +1,73 @@
+image:
+    # TODO: update to latest version, locally and here
+    name: docker/compose:latest
+    # https://stackoverflow.com/questions/48945972/gitlab-runner-locally-no-such-command-sh
+    # https://stackoverflow.com/questions/39868369/run-docker-compose-build-in-gitlab-ci-yml/41455005#41455005
+    entrypoint: ["/bin/sh", "-c"]
+
+services:
+    - docker:dind
+
+variables:
+    # TODO: research these variables, read URL below
+    # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+
+    CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:master
+    # TODO: add psql variables
+
+before_script:
+    # https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-container-registry-with-gitlab-cicd
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+stages:
+    - build
+    # - static
+    - test
+    - release
+    - deploy
+
+build:
+    stage: build
+    script:
+        - docker build --pull -t $CONTAINER_TEST_IMAGE .
+        - docker push $CONTAINER_TEST_IMAGE
+
+black:
+    stage: test
+    script:
+        # - docker pull $CONTAINER_TEST_IMAGE
+        # - docker-compose build
+        - docker-compose up -d
+        # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
+        - docker-compose exec -T web black --check .
+
+test:
+    stage: test
+    script:
+        # - docker pull $CONTAINER_TEST_IMAGE
+        # - docker-compose build
+        - docker-compose up -d
+        - docker-compose exec -T web make test
+
+release-image:
+    stage: release
+    script:
+        - docker pull $CONTAINER_TEST_IMAGE
+        - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+        - docker push $CONTAINER_RELEASE_IMAGE
+    only:
+        - master
+
+deploy:
+    stage: deploy
+    script:
+        - echo "Deployed!"
+    only:
+        - master
+
+
+# https://stackoverflow.com/questions/42295457/using-docker-compose-in-a-gitlab-ci-pipeline
+# https://bohumirzamecnik.cz/blog/2018/gitlab-docker-compose-tests/
