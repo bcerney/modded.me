@@ -1,5 +1,6 @@
 # https://www.freecodecamp.org/news/django-project-best-practices-for-happy-developers/
 
+# TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
 
 .PHONY: install
@@ -9,7 +10,6 @@ install: ## Install requirements
 
 .PHONY: migrate
 migrate: ## Make and run migrations
-	# TODO: fix this, wasn't creating quotes_app migrations
 	./$(DJ_ROOT)/manage.py makemigrations
 	./$(DJ_ROOT)/manage.py migrate
 
@@ -18,9 +18,7 @@ runserver: migrate ## Run Django server
 	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:8000
 
 .PHONY: test
-test: ## Make and run migrations
-	# TODO: fix this, wasn't creating quotes_app migrations
-	# ./$(DJ_ROOT)/manage.py makemigrations
+test: migrate ## Run tests
 	./$(DJ_ROOT)/manage.py test
 
 .PHONY: up
