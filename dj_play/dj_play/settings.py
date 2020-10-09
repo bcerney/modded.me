@@ -25,8 +25,9 @@ SECRET_KEY = "v!cbnv-ftetj5ijs3^ajmb=nd=oo79pw%pr*ug3mtt4x=+eo^y"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Needed by docker
-ALLOWED_HOSTS = ["0.0.0.0", "ec2-3-237-193-89.compute-1.amazonaws.com"]
+# Needed by docker = "0.0.0.0"
+# TODO: find more secure practice than wildcard
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

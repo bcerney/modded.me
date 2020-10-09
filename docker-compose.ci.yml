@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   web:
-    image: $CONTAINER_TEST_IMAGE
+    image: registry.gitlab.com/bcerney/django-playground:test-latest
     command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app

@@ -18,7 +18,8 @@ runserver: migrate ## Run Django server
 	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:8000
 
 .PHONY: test
-test: migrate ## Run tests
+test: ## Run tests
+	./$(DJ_ROOT)/manage.py migrate
 	./$(DJ_ROOT)/manage.py test
 
 .PHONY: up
