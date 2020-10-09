@@ -13,9 +13,12 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # aws ssm get-parameters --names <value> --with-decryption
 
+GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+
 git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
 cd django-playground
-git checkout aws-deploy-cleanup
+# sed will replace branch with $CI_COMMIT_REF_SLUG
+git checkout BRANCH_TO_CHECKOUT
 
 
 docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
