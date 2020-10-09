@@ -2,6 +2,7 @@
 
 # TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
+EC2=ec2-54-175-194-106.compute-1.amazonaws.com
 
 .PHONY: install
 install: ## Install requirements
@@ -32,3 +33,9 @@ build: ## Run local server
 
 .PHONY: docker-run
 docker-run: migrate runserver
+
+.PHONY: ssh-ec2-user
+ssh-ec2-user: ## Run local server;TODO: parameterize
+	ssh -i ~/.ssh/dj-play.pem ec2-user@$(EC2)
+
+# TODO: add make snapshot-test, make snapshot-prod
