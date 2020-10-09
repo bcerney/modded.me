@@ -15,6 +15,7 @@ variables:
     # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
     DOCKER_DRIVER: overlay2
 
+    # TODO: commit sha needed? revisit
     CI_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-$CI_COMMIT_REF_SLUG
     CI_TEST_LATEST: $CI_REGISTRY_IMAGE:test-latest
     CI_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:master
@@ -28,8 +29,8 @@ variables:
 
 stages:
     - build
-    - test
     - test-deploy
+    - test
     - release
     - deploy
 
@@ -40,33 +41,36 @@ build:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
         - docker pull $CI_TEST_IMAGE || true
-        - docker build --pull --cache-from $CI_TEST_IMAGE --tag $CI_TEST_IMAGE --tag $CI_TEST_LATEST .
+        # TODO: removed --pull to test cacheing impact, test and revisit
+        - docker build --cache-from $CI_TEST_IMAGE --tag $CI_TEST_IMAGE --tag $CI_TEST_LATEST .
         - docker push $CI_TEST_IMAGE
         - docker push $CI_TEST_LATEST
+    when: manual
 
-black:
-    stage: test
-    script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker-compose -f docker-compose.ci.yml up -d
-        # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
-        - docker-compose -f docker-compose.ci.yml exec -T web black --check .
+# black:
+#     stage: test
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker-compose -f docker-compose.ci.yml up -d
+#         # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
+#         - docker-compose -f docker-compose.ci.yml exec -T web black --check .
 
-test:
-    stage: test
-    script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker-compose -f docker-compose.ci.yml up -d
-        - docker-compose -f docker-compose.ci.yml exec  -T web make test
-    allow_failure: true
+# test:
+#     stage: test
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker-compose -f docker-compose.ci.yml up -d
+#         - docker-compose -f docker-compose.ci.yml exec  -T web make test
+#     allow_failure: true
 
 test-deploy:
     stage: test-deploy
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
     script:
-        # - aws ec2 describe-instances --filters Name=availability-zone,Values=us-east-1d
+        # Replace placeholder with correct branch
+        - sed -i "s/BRANCH_TO_CHECKOUT/$CI_COMMIT_REF_SLUG/" user-data-test.txt
         # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
-        - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --user-data file://user-data.txt
+        - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --user-data file://user-data-test.txt
     when: manual
 
 
@@ -81,11 +85,9 @@ release-image:
         - master
 
 deploy:
-    # TODO: add AWS deployment script based on test-deploy
     stage: deploy
     script:
-        - docker pull $CI_RELEASE_IMAGE
-        - echo "Deployed!"
+        - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --user-data file://user-data-prod.txt
     when: manual
     only:
         - master

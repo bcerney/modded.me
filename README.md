@@ -50,7 +50,5 @@ composetest_web_1     /bin/sh -c python app.py   Up      5000->5000/tcp
 - psql config
 # https://gitlab.com/gitlab-examples/postgres/-/blob/master/.gitlab-ci.yml
 
+
 TODO:
-- create GitlabCI IAM user with reduced permissions
-- Review gitlabci config options: https://docs.gitlab.com/ee/ci/yaml/README.html#include
-- Resolve get-parameter usage in shell script: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ssm/get-parameters.html

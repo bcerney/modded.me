@@ -6,11 +6,6 @@ FROM python:3.7
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Setup venv
-# ENV VENV_PATH=/opt/venv
-# RUN python3 -m venv $VENV_PATH
-# ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
 # Set work directory
 RUN mkdir /app
 WORKDIR /app
