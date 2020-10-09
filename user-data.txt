@@ -1,0 +1,22 @@
+#!/bin/bash -xe
+
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+yum -y update
+
+# https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9
+yum install -y docker git vim
+service docker start
+
+# docker-composes
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# aws ssm get-parameters --names <value> --with-decryption
+
+git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
+cd django-playground
+git checkout aws-deploy-cleanup
+
+
+docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
+docker-compose -f docker-compose.ci.yml up -d

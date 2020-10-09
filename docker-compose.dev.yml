@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   web:
-    image: registry.gitlab.com/bcerney/django-playground:master
+    build: .
     command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app
@@ -21,4 +21,3 @@ services:
 
 volumes:
   postgres_data:
-

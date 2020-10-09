@@ -45,32 +45,12 @@ composetest_redis_1   /usr/local/bin/run         Up
 composetest_web_1     /bin/sh -c python app.py   Up      5000->5000/tcp
 
 
-
 # gitlab-ci
 
 - psql config
 # https://gitlab.com/gitlab-examples/postgres/-/blob/master/.gitlab-ci.yml
 
-
-
-
 TODO:
-
-- create psql db user best practices
-- multi-env config for django/psql, env file or folder? best practices, both docker/django/psql
-- update version pinning w/ pip-compile, automate via makefile: https://martin-thoma.com/python-requirements/
-- makefile updates, .env for variables, any others from list: https://www.freecodecamp.org/news/django-project-best-practices-for-happy-developers/
-- 3rd party packages: https://learndjango.com/tutorials/essential-django-3rd-party-packages
-- gitlab-ci.yml
-
-- integrate nginx, redis: https://realpython.com/django-development-with-docker-compose-and-machine/
-- also: https://cloudonaut.io/how-to-dockerize-your-python-django-application-for-aws-fargate/
-
-- add bootstrap navbar: https://pypi.org/project/django-bootstrap-navbar/
-- create landing page w/ login link, index becomes user dashboard
-- CRUD operations for quotes/reflections
-- all-auth later on
-- password reset: https://learndjango.com/tutorials/django-password-reset-tutorial
-
-
-
+- create GitlabCI IAM user with reduced permissions
+- Review gitlabci config options: https://docs.gitlab.com/ee/ci/yaml/README.html#include
+- Resolve get-parameter usage in shell script: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ssm/get-parameters.html

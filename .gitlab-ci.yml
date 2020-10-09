@@ -12,60 +12,81 @@ variables:
     # TODO: research these variables, read URL below
     # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
     DOCKER_HOST: tcp://docker:2375/
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
     DOCKER_DRIVER: overlay2
 
-    CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:master
-    # TODO: add psql variables
+    CI_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-$CI_COMMIT_REF_SLUG
+    CI_TEST_LATEST: $CI_REGISTRY_IMAGE:test-latest
+    CI_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:master
+    # TODO: add psql variables, parameterize repeated values like compose file
 
-before_script:
+    #TODO: replace before_script with extends syntax
+    # https://stackoverflow.com/questions/54074433/gitlab-ci-specifying-stages-in-before-script
+# before_script:
     # https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-container-registry-with-gitlab-cicd
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 stages:
     - build
-    # - static
     - test
+    - test-deploy
     - release
     - deploy
 
 build:
     stage: build
     script:
-        - docker build --pull -t $CONTAINER_TEST_IMAGE .
-        - docker push $CONTAINER_TEST_IMAGE
+        # https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-container-registry-with-gitlab-cicd
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
+        - docker pull $CI_TEST_IMAGE || true
+        - docker build --pull --cache-from $CI_TEST_IMAGE --tag $CI_TEST_IMAGE --tag $CI_TEST_LATEST .
+        - docker push $CI_TEST_IMAGE
+        - docker push $CI_TEST_LATEST
 
 black:
     stage: test
     script:
-        # - docker pull $CONTAINER_TEST_IMAGE
-        # - docker-compose build
-        - docker-compose up -d
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker-compose -f docker-compose.ci.yml up -d
         # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
-        - docker-compose exec -T web black --check .
+        - docker-compose -f docker-compose.ci.yml exec -T web black --check .
 
 test:
     stage: test
     script:
-        # - docker pull $CONTAINER_TEST_IMAGE
-        # - docker-compose build
-        - docker-compose up -d
-        - docker-compose exec -T web make test
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker-compose -f docker-compose.ci.yml up -d
+        - docker-compose -f docker-compose.ci.yml exec  -T web make test
+    allow_failure: true
+
+test-deploy:
+    stage: test-deploy
+    image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+    script:
+        # - aws ec2 describe-instances --filters Name=availability-zone,Values=us-east-1d
+        # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
+        - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --user-data file://user-data.txt
+    when: manual
+
 
 release-image:
     stage: release
     script:
-        - docker pull $CONTAINER_TEST_IMAGE
-        - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-        - docker push $CONTAINER_RELEASE_IMAGE
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker pull $CI_TEST_IMAGE
+        - docker tag $CI_TEST_IMAGE $CI_RELEASE_IMAGE
+        - docker push $CI_RELEASE_IMAGE
     only:
         - master
 
 deploy:
+    # TODO: add AWS deployment script based on test-deploy
     stage: deploy
     script:
-        - docker pull $CONTAINER_RELEASE_IMAGE
+        - docker pull $CI_RELEASE_IMAGE
         - echo "Deployed!"
+    when: manual
     only:
         - master
 
