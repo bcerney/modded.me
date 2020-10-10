@@ -11,7 +11,14 @@ service docker start
 sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-# aws ssm get-parameters --names <value> --with-decryption
+# Mount EBS volume
+# TODO handle /etc/fstab update to mount on reboot
+# https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+# TODO: don't want to reformt w/ snapshots, need to check?
+# mkfs -t xfs /dev/sdb
+mkdir -p /data/postgres_data
+mount /dev/sdb /data
+lsblk
 
 GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 

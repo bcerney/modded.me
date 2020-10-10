@@ -19,5 +19,11 @@ services:
     depends_on:
       - db
 
+# https://myshittycode.com/2017/06/01/docker-defining-custom-location-for-named-volume/
 volumes:
   postgres_data:
+    driver_opts:
+      type: none
+      device: /data/postgres_data
+      o: bind
+
