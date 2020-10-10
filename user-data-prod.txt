@@ -16,10 +16,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-# mkfs -t xfs /dev/sdb
-mkdir -p /data/postgres_data
+#mkfs -t xfs /dev/sdb
+mkdir /data
 mount /dev/sdb /data
 lsblk
+mkdir -p /data/postgres_data
 
 GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 
@@ -27,6 +28,28 @@ git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
 cd django-playground
 git checkout master
 
+POSTGRES_DB=$(aws ssm get-parameters --names "/test/postgres-db" --query Parameters[*].Value --region us-east-1 --output text)
+POSTGRES_USER=$(aws ssm get-parameters --names "/test/postgres-user" --query Parameters[*].Value --region us-east-1 --output text)
+POSTGRES_PASSWORD=$(aws ssm get-parameters --names "/test/postgres-password" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+
+cat > .env <<EOL
+POSTGRES_DB=${POSTGRES_DB}
+POSTGRES_USER=${POSTGRES_USER}
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+EOL
+
+cd dj_play/dj_play/
+
+SECRET_KEY=$(aws ssm get-parameters --names "/test/secret-key" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+DATABASE_URL=$(aws ssm get-parameters --names "/test/database-url" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+
+cat > .env <<EOL
+ENV=prod
+SECRET_KEY=${SECRET_KEY}
+DATABASE_URL=${DATABASE_URL}
+EOL
+
+cd ../..
 
 docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
 docker-compose -f docker-compose.prod.yml up -d

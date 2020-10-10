@@ -5,6 +5,8 @@ django-taggit
 django-taggit-serializer
 django-bootstrap4
 django-environ
+django-extensions
+django-debug-toolbar
 
 psycopg2-binary
 

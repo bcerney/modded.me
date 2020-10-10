@@ -34,36 +34,37 @@ stages:
     - release
     - deploy
 
-build:
-    stage: build
-    script:
-        # https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-container-registry-with-gitlab-cicd
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
-        - docker pull $CI_TEST_IMAGE || true
-        # TODO: removed --pull to test cacheing impact, test and revisit
-        - docker build --cache-from $CI_TEST_IMAGE --tag $CI_TEST_IMAGE --tag $CI_TEST_LATEST .
-        - docker push $CI_TEST_IMAGE
-        - docker push $CI_TEST_LATEST
-    when: manual
+# build:
+#     stage: build
+#     script:
+#         # https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-container-registry-with-gitlab-cicd
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
+#         - docker pull $CI_TEST_IMAGE || true
+#         # TODO: removed --pull to test cacheing impact, test and revisit
+#         - docker build --cache-from $CI_TEST_IMAGE --tag $CI_TEST_IMAGE --tag $CI_TEST_LATEST .
+#         - docker push $CI_TEST_IMAGE
+#         - docker push $CI_TEST_LATEST
+#     when: manual
 
-black:
-    stage: test
-    script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker-compose -f docker-compose.ci.yml up -d
-        # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
-        - docker-compose -f docker-compose.ci.yml exec -T web black --check .
-    when: manual
+# TODO: integrate black and test into test-deploy
+# black:
+#     stage: test
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker-compose -f docker-compose.test.yml up -d
+#         # https://medium.com/@zhao.li/how-to-understand-the-difference-between-docker-composes-up-vs-run-vs-exec-commands-a506151967df
+#         - docker-compose -f docker-compose.test.yml exec -T web black --check .
+#     when: manual
 
-test:
-    stage: test
-    script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker-compose -f docker-compose.ci.yml up -d
-        - docker-compose -f docker-compose.ci.yml exec  -T web make test
-    when: manual
-    allow_failure: true
+# test:
+#     stage: test
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker-compose -f docker-compose.test.yml up -d
+#         - docker-compose -f docker-compose.test.yml exec  -T web make test
+#     when: manual
+#     allow_failure: true
 
 test-deploy:
     stage: test-deploy
@@ -75,20 +76,21 @@ test-deploy:
         - SNAPSHOT_ID=$(aws ec2 describe-snapshots --filters Name=tag:Env,Values=test-latest --query "Snapshots[*].[SnapshotId]" --output text)
         # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
         - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --block-device-mappings "DeviceName=/dev/sdb,Ebs={DeleteOnTermination=true,SnapshotId=$SNAPSHOT_ID,VolumeSize=20,VolumeType=gp2}" --user-data file://user-data-test.txt
+        # - aws ec2 run-instances --launch-template LaunchTemplateId=lt-0adba46df63d6f34f --user-data file://user-data-test.txt
     when: manual
 
 
-release-image:
-    stage: release
-    script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker pull $CI_TEST_IMAGE
-        - docker tag $CI_TEST_IMAGE $CI_RELEASE_IMAGE
-        - docker push $CI_RELEASE_IMAGE
-    only:
-        - master
+# release-image:
+#     stage: release
+#     script:
+#         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#         - docker pull $CI_TEST_IMAGE
+#         - docker tag $CI_TEST_IMAGE $CI_RELEASE_IMAGE
+#         - docker push $CI_RELEASE_IMAGE
+#     only:
+#         - master
 
-deploy:
+release-deploy:
     stage: deploy
     image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
     # TODO: update prod template w/ non-spot instance

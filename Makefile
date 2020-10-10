@@ -2,13 +2,19 @@
 
 # TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
-EC2=ec2-3-236-15-76.compute-1.amazonaws.com
+EC2=ec2-3-231-226-105.compute-1.amazonaws.com
 env=$(ENV)
 
 .PHONY: install
 install: ## Install requirements
 	pip install --upgrade pip
 	pip install -r requirements.txt
+
+.PHONY: black
+black: ## black formatter
+	black .
+
+
 
 .PHONY: migrate
 migrate: ## Make and run migrations
@@ -18,6 +24,10 @@ migrate: ## Make and run migrations
 .PHONY: runserver
 runserver: migrate ## Run Django server
 	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:8000
+
+.PHONY: shell
+shell: ## Run Django shell
+	./$(DJ_ROOT)/manage.py shell_plus
 
 .PHONY: test
 test: ## Run tests

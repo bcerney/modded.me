@@ -20,27 +20,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # django-environ
 root = environ.Path(__file__) - 3  # get root of the project
-env = environ.Env(
-    DEBUG=(bool, False) # set casting, default value
-)
-environ.Env.read_env() # reading .env file
+env = environ.Env(DEBUG=(bool, False))  # set casting, default value
+environ.Env.read_env()  # reading .env file
 
-DEBUG = env('DEBUG') # False if not in os.environ
+DEBUG = env("DEBUG")  # False if not in os.environ
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env("SECRET_KEY")
 # Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
 DATABASES = {
     # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
-    'default': env.db(),
+    "default": env.db(),
     # read os.environ['SQLITE_URL']
-    'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db')
+    "extra": env.db("SQLITE_URL", default="sqlite:////tmp/my-tmp-sqlite.db"),
 }
 
 # Needed by docker = "0.0.0.0"
 # TODO: find more secure practice than wildcard
 ALLOWED_HOSTS = ["*"]
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# TODO: breaking connection on test-deploy right now, investigate
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
 
 # Application definition
