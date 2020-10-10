@@ -2,7 +2,8 @@
 
 # TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
-EC2=ec2-3-236-23-192.compute-1.amazonaws.com
+EC2=ec2-3-236-15-76.compute-1.amazonaws.com
+env=$(ENV)
 
 .PHONY: install
 install: ## Install requirements
@@ -23,16 +24,22 @@ test: ## Run tests
 	./$(DJ_ROOT)/manage.py migrate
 	./$(DJ_ROOT)/manage.py test
 
-.PHONY: up
-up: ## Run local server
-	docker-compose up
 
 .PHONY: build
 build: ## Run local server
-	docker-compose build
+	docker-compose -f docker-compose.$(env).yml build
 
-.PHONY: docker-run
-docker-run: migrate runserver
+.PHONY: up
+up: ## Run local server
+	docker-compose -f docker-compose.$(env).yml up
+
+.PHONY: up
+down: ## Run local server
+	docker-compose -f docker-compose.$(env).yml down
+
+.PHONY: up
+exec: ## Run local server
+	docker-compose -f docker-compose.$(env).yml exec web bash
 
 .PHONY: ssh-ec2-user
 ssh-ec2-user: ## Run local server;TODO: parameterize
