@@ -2,7 +2,7 @@
 
 # TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
-EC2=ec2-54-175-194-106.compute-1.amazonaws.com
+EC2=ec2-3-236-23-192.compute-1.amazonaws.com
 
 .PHONY: install
 install: ## Install requirements

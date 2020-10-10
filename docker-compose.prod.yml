@@ -21,4 +21,7 @@ services:
 
 volumes:
   postgres_data:
-
+    driver_opts:
+      type: none
+      device: /data/postgres_data
+      o: bind

@@ -21,7 +21,7 @@ mkdir -p /data/postgres_data
 mount /dev/sdb /data
 lsblk
 
-GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --output text)
+GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 
 git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
 cd django-playground
