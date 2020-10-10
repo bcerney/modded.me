@@ -4,6 +4,7 @@ djangorestframework
 django-taggit
 django-taggit-serializer
 django-bootstrap4
+django-environ
 
 psycopg2-binary
 
