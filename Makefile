@@ -14,6 +14,11 @@ install: ## Install requirements
 black: ## black formatter
 	black .
 
+
+.PHONY: compile
+compile: ## Install requirements
+	pip-compile -U requirements.in
+
 .PHONY: migrate
 migrate: ## Make and run migrations
 	./$(DJ_ROOT)/manage.py makemigrations
