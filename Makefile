@@ -5,19 +5,19 @@ DJ_ROOT=dj_play
 EC2=ec2-3-231-226-105.compute-1.amazonaws.com
 env=$(ENV)
 
+
+.PHONY: compile
+compile: ## Install requirements
+	pip-compile -U $(DJ_ROOT)/requirements.in
+
 .PHONY: install
 install: ## Install requirements
 	pip install --upgrade pip
-	pip install -r requirements.txt
+	pip install -r $(DJ_ROOT)/requirements.txt
 
 .PHONY: black
 black: ## black formatter
 	black .
-
-
-.PHONY: compile
-compile: ## Install requirements
-	pip-compile -U requirements.in
 
 .PHONY: migrate
 migrate: ## Make and run migrations
@@ -33,10 +33,8 @@ shell: ## Run Django shell
 	./$(DJ_ROOT)/manage.py shell_plus
 
 .PHONY: test
-test: ## Run tests
-	./$(DJ_ROOT)/manage.py migrate
+test: migrate ## Run tests
 	./$(DJ_ROOT)/manage.py test
-
 
 .PHONY: build
 build: ## Run local server
@@ -46,16 +44,20 @@ build: ## Run local server
 up: ## Run local server
 	docker-compose -f docker-compose.$(env).yml up
 
-.PHONY: up
+.PHONY: down
 down: ## Run local server
 	docker-compose -f docker-compose.$(env).yml down
 
-.PHONY: up
+.PHONY: exec
 exec: ## Run local server
 	docker-compose -f docker-compose.$(env).yml exec web bash
 
 .PHONY: ssh-ec2-user
 ssh-ec2-user: ## Run local server;TODO: parameterize
 	ssh -i ~/.ssh/dj-play.pem ec2-user@$(EC2)
+
+.PHONY: gunicorn
+gunicorn: ## Run local server
+	gunicorn dj_play.wsgi:application -w 2 -b :8000
 
 # TODO: add make snapshot-test, make snapshot-prod

@@ -2,7 +2,9 @@ version: '3'
 
 services:
   db:
-    image: "postgres:11"
+    image: postgres:latest
+    init: true
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -13,7 +15,9 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 
   web:
-    build: .
+    build: ./dj_play
+    init: true
+    restart: on-failure
     command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app
