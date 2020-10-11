@@ -57,7 +57,7 @@ ssh-ec2-user: ## Run local server;TODO: parameterize
 	ssh -i ~/.ssh/dj-play.pem ec2-user@$(EC2)
 
 .PHONY: gunicorn
-gunicorn: ## Run local server
-	gunicorn dj_play.wsgi:application -w 2 -b :8000
+gunicorn: migrate ## Run local server
+	cd $(DJ_ROOT) && gunicorn $(DJ_ROOT).wsgi -w 2 -b 0.0.0.0:8000
 
 # TODO: add make snapshot-test, make snapshot-prod
