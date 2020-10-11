@@ -3,6 +3,8 @@ version: '3'
 services:
   db:
     image: postgres:latest
+    init: true
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -14,6 +16,8 @@ services:
 
   web:
     build: .
+    init: true
+    restart: on-failure
     command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app
