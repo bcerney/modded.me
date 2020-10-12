@@ -1,30 +1,46 @@
 version: '3'
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx:mainline-alpine
+    init: true
+    restart: always
+    ports:
+      - 1337:80
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - staticfiles:/app/dj_play/staticfiles
+  
+  web:
+    container_name: django
+    build: ./dj_play
+    init: true
+    restart: always
+    command: ["./dj_play/scripts/wait-for-it.sh", "db:5432", "--", "make", "gunicorn"]
+    volumes:
+      - .:/app
+      - staticfiles:/app/dj_play/staticfiles
+    expose:
+      - 8000
+    depends_on:
+      - db
+
   db:
+    container_name: postgresdb
     image: postgres:latest
     init: true
     restart: always
     ports:
       - "5432:5432"
     environment:
+      # .env
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
-  web:
-    build: ./dj_play
-    init: true
-    restart: always
-    command: ["./scripts/wait-for-it.sh", "db:5432", "--", "make", "gunicorn"]
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-
 volumes:
+  staticfiles:
   postgres_data:

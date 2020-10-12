@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
+
+<img src="{% static "quotes_app/guitar.jpg" %}" alt="My image">
 
 <h2>Welcome, {{ user.username }}!</h2>
 
