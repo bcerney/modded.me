@@ -1,0 +1,7 @@
+Django
+djangorestframework
+django-taggit
+django-taggit-serializer
+django-bootstrap4
+
+psycopg2-binary
