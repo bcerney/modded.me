@@ -4,15 +4,51 @@
 {% load bootstrap4 %}
 
 {% block bootstrap4_content %}
-    <div class="container">
-        <h1>{% block title %}Django Playground{% endblock %}</h1>
-
-        <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Log Out</a>
-
-        {# Display django.contrib.messages as Bootstrap alerts #}
-        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
-
-        {% block content %}{% endblock %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'get_lucky_draw:home' %}">Django Playground</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>      
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <!-- <li class="nav-item active">
+                <a class="nav-link" href="{% url 'get_lucky_draw:home' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'get_lucky_draw:home' %}">Link</a>
+            </li> -->
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Apps
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'get_lucky_draw:home' %}">Get Lucky Draw</a>
+                <a class="dropdown-item" href="{% url 'quotes_app:index' %}">Quote App</a>
+                <!-- <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a> -->
+                </div>
+            </li>
+        </ul>
     </div>
+</nav>  
+
+
+
+<!-- This is where you'll put your page content. Leave it blank for now. -->
+<div class="container p-3">
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+    {% block content %}Nothing Here{% endblock %}
+</div>
 
 {% endblock %}
+
+<!-- TODO: solve active class switch issue -->
+<!-- https://stackoverflow.com/questions/24514717/bootstrap-navbar-active-state-not-working -->
+<!-- <script>
+$(".nav .nav-link").on("click", function(){
+   $(".nav").find(".active").removeClass("active");
+   $(this).addClass("active");
+});
+</script> -->

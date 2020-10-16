@@ -17,10 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    # TODO: change /admin to something less obvious
-    path("admin/", admin.site.urls),
-    path("", include("quotes_app.urls")),
-    path("", include("get_lucky_draw.urls")),
+    path("aquaman/", admin.site.urls),
+    path("quotes/", include("quotes_app.urls")),
+    path("getlucky/", include("get_lucky_draw.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     # path('', include('quotes_api.urls')),
 ]
