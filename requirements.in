@@ -1,7 +1,9 @@
 Django
+django-bootstrap4
+django-bootstrap-navbar
+django-environ
 djangorestframework
 django-taggit
 django-taggit-serializer
-django-bootstrap4
 
 psycopg2-binary
