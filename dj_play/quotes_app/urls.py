@@ -8,6 +8,7 @@ app_name = "quotes_app"
 urlpatterns = [
     # auth
     path("signup/", views.SignUpView.as_view(), name="signup"),
+    # TODO: remove once integrated back with get_lucky_draw
     path("", views.IndexView.as_view(), name="index"),
     # quotes/
     path("quotes/<int:pk>/", views.QuoteDetailView.as_view(), name="quote-detail"),

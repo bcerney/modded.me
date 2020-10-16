@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Django tutorial
     "quotes_app.apps.QuotesAppConfig",
+    "get_lucky_draw.apps.GetLuckyDrawConfig",
     # DRF tutorial
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     # 'rest_framework',

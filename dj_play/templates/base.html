@@ -5,10 +5,8 @@
 
 {% block bootstrap4_content %}
     <div class="container">
-        <h1>{% block title %}Quotes App{% endblock %}</h1>
+        <h1>{% block title %}{% endblock %}</h1>
 
-        <a class="btn btn-success" href="{% url 'quotes_app:index' %}" role="button">Home</a>
-        <a class="btn btn-primary" href="{% url 'quotes_app:add-quote' %}" role="button">Add Quote</a>
         <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Log Out</a>
 
         {# Display django.contrib.messages as Bootstrap alerts #}

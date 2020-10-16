@@ -2,7 +2,7 @@
 
 # TODO: any need to dynamically determine root?
 DJ_ROOT=dj_play
-EC2=ec2-3-231-226-105.compute-1.amazonaws.com
+EC2=ec2-3-237-9-28.compute-1.amazonaws.com
 env=$(ENV)
 
 .PHONY: install
@@ -13,8 +13,6 @@ install: ## Install requirements
 .PHONY: black
 black: ## black formatter
 	black .
-
-
 
 .PHONY: migrate
 migrate: ## Make and run migrations
@@ -42,6 +40,10 @@ build: ## Run local server
 .PHONY: up
 up: ## Run local server
 	docker-compose -f docker-compose.$(env).yml up
+
+.PHONY: up-debug
+up-debug: ## Run local server with Pdb debug access
+	docker-compose -f docker-compose.dev.yml run --service-ports web
 
 .PHONY: up
 down: ## Run local server
