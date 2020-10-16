@@ -5,6 +5,16 @@ DJ_ROOT=dj_play
 EC2=ec2-3-237-9-28.compute-1.amazonaws.com
 env=$(ENV)
 
+.PHONY: compile
+compile: ## Compile requirements
+	pip-compile -U requirements.in
+
+.PHONY: install-dev
+install-dev: ## Install dev requirements
+	pip install --upgrade pip
+	pip install -r requirements-dev.in
+	pip install -r requirements.txt
+
 .PHONY: install
 install: ## Install requirements
 	pip install --upgrade pip
@@ -13,11 +23,6 @@ install: ## Install requirements
 .PHONY: black
 black: ## black formatter
 	black .
-
-
-.PHONY: compile
-compile: ## Install requirements
-	pip-compile -U requirements.in
 
 .PHONY: migrate
 migrate: ## Make and run migrations
