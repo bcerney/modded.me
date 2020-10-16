@@ -1,3 +1,4 @@
+https://gist.github.com/kshepp/98124b932a6f3dbd95e9
 <!-- This loads of all of files that you call below from your 'static' folder -->
 {% load staticfiles %}
 <!--The static folder consists of your bootstrap files (.css, .js, fonts, etc)-->

@@ -1,6 +1,5 @@
 Django
 django-bootstrap4
-django-bootstrap-navbar
 django-environ
 djangorestframework
 django-taggit

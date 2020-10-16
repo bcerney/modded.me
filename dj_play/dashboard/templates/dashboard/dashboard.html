@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h3>Welcome, {{ user.username }}!</h3>
+
+{% if quote %}
+<blockquote class="blockquote text-center">
+    <p class="mb-0">"{{ quote.text }}"</p>
+    <footer class="blockquote-footer">{{ quote.author }}</footer>
+</blockquote>
+{% endif %}
+
+{% endblock %}
