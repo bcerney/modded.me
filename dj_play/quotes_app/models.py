@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 
@@ -45,8 +44,3 @@ class Reflection(models.Model):
 
     class Meta:
         ordering = ["created"]
-
-
-# https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
-class User(AbstractUser):
-    pass

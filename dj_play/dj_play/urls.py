@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("aquaman/", admin.site.urls),
+    path("", include("dashboard.urls")),
     path("quotes/", include("quotes_app.urls")),
     path("getlucky/", include("get_lucky_draw.urls")),
     path("accounts/", include("django.contrib.auth.urls")),

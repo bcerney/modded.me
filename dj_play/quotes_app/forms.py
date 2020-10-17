@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 
-from .models import Quote, Reflection, User
+from .models import Quote, Reflection
 
 
 class QuoteCreateForm(ModelForm):
@@ -24,9 +24,3 @@ class ReflectionCreateForm(ModelForm):
         model = Reflection
         fields = ("text",)
         # fields = '__all__'
-
-
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ("username",)

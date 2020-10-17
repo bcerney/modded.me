@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Django tutorial
     "quotes_app.apps.QuotesAppConfig",
     "get_lucky_draw.apps.GetLuckyDrawConfig",
+    "dashboard.apps.DashboardConfig",
     # DRF tutorial
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     # 'rest_framework',
@@ -112,7 +113,7 @@ WSGI_APPLICATION = "dj_play.wsgi.application"
 #     }
 # }
 
-AUTH_USER_MODEL = "quotes_app.User"
+AUTH_USER_MODEL = "dashboard.CustomUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

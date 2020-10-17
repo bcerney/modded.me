@@ -12,6 +12,6 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <button class="btn btn-primary" type="submit">Login</button>
-    <a class="btn btn-primary" href="{% url 'quotes_app:signup' %}" role="button">Sign Up</a>
+    <a class="btn btn-primary" href="{% url 'dashboard:signup' %}" role="button">Sign Up</a>
 </form>
 {% endblock %}

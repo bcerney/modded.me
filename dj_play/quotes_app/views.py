@@ -7,21 +7,21 @@ from django.views import generic
 
 from taggit.models import Tag
 
-from .forms import QuoteCreateForm, ReflectionCreateForm, CustomUserCreationForm
+from .forms import QuoteCreateForm, ReflectionCreateForm
 from .models import Quote, Reflection
 
 
-class SignUpView(generic.CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/signup.html"
+# class SignUpView(generic.CreateView):
+#     form_class = CustomUserCreationForm
+#     success_url = reverse_lazy("login")
+#     template_name = "registration/signup.html"
 
 
-class IndexView(LoginRequiredMixin, generic.TemplateView):
-    template_name = "quotes_app/index.html"
+class HomeView(LoginRequiredMixin, generic.TemplateView):
+    template_name = "quotes_app/home.html"
 
     def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
+        context = super(HomeView, self).get_context_data(**kwargs)
         context["quotes"] = Quote.objects.filter(user=self.request.user)
         return context
 

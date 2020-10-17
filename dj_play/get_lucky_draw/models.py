@@ -24,7 +24,21 @@ class ActionBodyPartCard:
         "Butt",
         "Groin",
     ]
-    BODY_PARTS_WEIGHTS = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.025, 0.025, 0.025, 0.025]
+    BODY_PARTS_WEIGHTS = [
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.025,
+        0.025,
+        0.025,
+        0.025,
+    ]
 
     def __init__(self):
         self.title = "Action Card"
