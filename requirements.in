@@ -1,6 +1,7 @@
 Django
 django-bootstrap4
 django-environ
+django-extensions
 djangorestframework
 django-taggit
 django-taggit-serializer

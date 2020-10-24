@@ -56,16 +56,18 @@ INSTALLED_APPS = [
     "quotes_app.apps.QuotesAppConfig",
     "get_lucky_draw.apps.GetLuckyDrawConfig",
     "dashboard.apps.DashboardConfig",
-    # DRF tutorial
-    # https://www.django-rest-framework.org/tutorial/1-serialization/
-    # 'rest_framework',
-    # 'quotes_api.apps.QuotesApiConfig',
     # django-taggit
     # https://github.com/jazzband/django-taggit
     "taggit",
     "taggit_serializer",
     # django-bootstrap4
     "bootstrap4",
+    # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
+    "django_extensions",
+    # DRF tutorial
+    # https://www.django-rest-framework.org/tutorial/1-serialization/
+    # 'rest_framework',
+    # 'quotes_api.apps.QuotesApiConfig',
 ]
 
 MIDDLEWARE = [

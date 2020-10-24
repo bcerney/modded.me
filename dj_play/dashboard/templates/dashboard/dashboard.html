@@ -15,4 +15,33 @@
 </blockquote>
 {% endif %}
 
+{% if virtues %}
+
+    {% for virtue in virtues %}
+    <div class="row">
+      <div class="col-sm-12 p-2">
+        <div class="card">
+           <div class="card-header">{{ virtue.title }}</div>
+           <div class="card-body">
+             <p class="card-title">{{ virtue.description }}</p>
+       
+             <p class="card-text">
+               {% for topic in virtue.topics.all %}
+                 {{ topic }}: 
+                   {% for task in topic.tasks.all %}
+                     <a href="#" class="badge badge-primary">{{ task }}</a>
+                   {% endfor %}
+               {% endfor %}
+             </p>
+
+             <a href="{% url 'dashboard:virtue-detail' virtue.id %}" class="btn btn-primary">Explore</a>
+           </div>
+         </div>
+       </div>
+     </div>
+     {% endfor %}
+
+{% endif %}
+
+
 {% endblock %}

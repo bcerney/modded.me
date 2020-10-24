@@ -73,12 +73,6 @@ class Topic(models.Model):
         related_name="topics",
         on_delete=models.CASCADE,
     )
-    # tasks = models.ForeignKey(
-    #     "Task",
-    #     related_name="topic",
-    #     blank=True,
-    #     on_delete=models.CASCADE,
-    # )
 
     def __str__(self):
         return f"{self.title}"
@@ -90,6 +84,7 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=False)
     description = models.CharField(max_length=200, blank=False)
+    notes = models.TextField(null=True, blank=True)
     xp = models.IntegerField(default=1)
     virtue = models.ForeignKey(
         "Virtue",
