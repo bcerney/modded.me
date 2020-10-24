@@ -1,5 +1,7 @@
 pip-tools
 
+django-extensions
+
 pdbpp
 black
 
