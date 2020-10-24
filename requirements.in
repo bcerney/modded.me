@@ -6,4 +6,5 @@ djangorestframework
 django-taggit
 django-taggit-serializer
 
+gunicorn
 psycopg2-binary

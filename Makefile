@@ -31,7 +31,11 @@ migrate: ## Make and run migrations
 
 .PHONY: runserver
 runserver: migrate ## Run Django server
-	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:8000
+	./$(DJ_ROOT)/manage.py runserver 0.0.0.0:80
+
+.PHONY: gunicorn
+gunicorn: migrate ## Run Django server
+	cd $(DJ_ROOT) && gunicorn --bind 0.0.0.0:80 dj_play.wsgi:application
 
 .PHONY: shell
 shell: ## Run Django shell

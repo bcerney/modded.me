@@ -28,7 +28,7 @@ git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
 cd django-playground
 
 # sed will replace branch with $CI_COMMIT_REF_SLUG
-git checkout BRANCH_TO_CHECKOUT
+git checkout sysbgdg-v1
 
 POSTGRES_DB=$(aws ssm get-parameters --names "/test/postgres-db" --query Parameters[*].Value --region us-east-1 --output text)
 POSTGRES_USER=$(aws ssm get-parameters --names "/test/postgres-user" --query Parameters[*].Value --region us-east-1 --output text)
@@ -56,5 +56,5 @@ EOL
 
 cd ../..
 
-docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
+# docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
 docker-compose -f docker-compose.test.yml up -d
