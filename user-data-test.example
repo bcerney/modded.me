@@ -15,7 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-mkfs -t xfs /dev/sdb
+# mkfs -t xfs /dev/sdb
 mkdir /data
 mount /dev/sdb /data
 lsblk
@@ -28,7 +28,7 @@ git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
 cd django-playground
 
 # sed will replace branch with $CI_COMMIT_REF_SLUG
-git checkout sysbgdg-v1
+git checkout BRANCH_TO_CHECKOUT
 
 POSTGRES_DB=$(aws ssm get-parameters --names "/test/postgres-db" --query Parameters[*].Value --region us-east-1 --output text)
 POSTGRES_USER=$(aws ssm get-parameters --names "/test/postgres-user" --query Parameters[*].Value --region us-east-1 --output text)
