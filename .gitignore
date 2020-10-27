@@ -1,11 +1,13 @@
 
-
 # Python
 venv/
 __pycache__
 
 # Django
 .env
+
+# Generated
+user-data-test.txt
 
 # IDE
 .vscode

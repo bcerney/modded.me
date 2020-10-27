@@ -18,11 +18,11 @@ services:
     build: .
     init: true
     restart: on-failure
-    command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
+    command: ["./wait-for-it.sh", "db:5432", "--", "make", "gunicorn"]
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "80:80"
     depends_on:
       - db
 

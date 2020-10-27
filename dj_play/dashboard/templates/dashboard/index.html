@@ -2,10 +2,25 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %} BiggerBoard.digital {% endblock %}
 
 {% block content %}
 
-<h1>Welcome to Django Playground!</h1>
+<div class="row">
+  <div class="col-sm-12 p-2">
+    <div class="jumbotron">
+        <h1 class="display-4">Bigger Board Digital</h1>
+        <p class="lead">Exploring gamification and behavioral design through web application development</p>
+        <!-- <hr class="my-4"> -->
+        <!-- <p>It uses utility classes for typography and spacing to space content out within the larger container.</p> -->
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="{% url 'dashboard:signup' %}" role="button">Sign Up</a>
+        </p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Log In</a>
+        </p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

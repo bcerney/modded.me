@@ -15,7 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-mkfs -t xfs /dev/sdb
+# mkfs -t xfs /dev/sdb
 mkdir /data
 mount /dev/sdb /data
 lsblk
@@ -56,5 +56,5 @@ EOL
 
 cd ../..
 
-docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
+# docker login -u bcerney -p $GITLAB_TOKEN registry.gitlab.com
 docker-compose -f docker-compose.test.yml up -d
