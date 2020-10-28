@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+
+<h2>{{ task.title }}</h2>
+
+<p>Created: {{ task.created }}</p>
+<p>{{ task.description }}</p>
+<p>Notes: {{ task.notes }}</p>
+<p>XP: {{ task.xp }}</p>
+<p>Virtue: {{ task.virtue.title }}</p>
+<p>Topic: {{ task.topic }}</p>
+
+<a href="{% url 'dashboard:complete-task' task.id %}" class="btn btn-primary">Complete Task</a>
+
+{% endblock %}

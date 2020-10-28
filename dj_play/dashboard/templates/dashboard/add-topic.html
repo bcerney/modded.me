@@ -2,14 +2,16 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Add Quote | BiggerBoard.digital{% endblock %}
+{% block title %}Add Topic | BiggerBoard.digital{% endblock %}
 
 {% block content %}
-  <h2>Add Quote</h2>
+  <h2>Add Topic</h2>
 
   <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons submit='Add' reset="Cancel" %}{% endbuttons %}
   </form>
+
+  <h1>TODO: add Topic table</h1>
 {% endblock %}
