@@ -2,23 +2,27 @@
 
 {% load bootstrap4 %}
 
-{% block title %} BiggerBoard.digital {% endblock %}
+{% block title %}Modded.Me{% endblock %}
 
 {% block content %}
 
 <div class="row">
   <div class="col-sm-12 p-2">
     <div class="jumbotron">
-        <h1 class="display-4">Bigger Board Digital</h1>
+        <h1 class="display-4">Modded.Me</h1>
         <p class="lead">Exploring gamification and behavioral design through web application development</p>
-        <!-- <hr class="my-4"> -->
-        <!-- <p>It uses utility classes for typography and spacing to space content out within the larger container.</p> -->
+        {% if user.is_authenticated %}
         <p class="lead">
-          <a class="btn btn-primary btn-lg" href="{% url 'dashboard:signup' %}" role="button">Sign Up</a>
+          <a class="btn btn-primary btn-lg" href="{% url 'dashboard:dashboard' %}" role="button">Dashboard</a>
         </p>
-        <p class="lead">
-          <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Log In</a>
-        </p>
+        {% else %}
+          <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url 'dashboard:signup' %}" role="button">Sign Up</a>
+          </p>
+          <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Log In</a>
+          </p>        
+        {% endif %}
     </div>
   </div>
 </div>

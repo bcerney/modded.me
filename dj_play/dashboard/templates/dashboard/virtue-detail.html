@@ -2,14 +2,14 @@
 
 {% load bootstrap4 %}
 
-{% block title %}{% endblock %}
+{% block title %} {{ virtue.title }} | Modded.Me{% endblock %}
 
 {% block content %}
 
 <h2>{{ virtue.title }}</h2>
-<h2>{{ virtue.level }}</h2>
-<h2>{{ virtue.xp }}</h2>
-<h2>{{ virtue.xp_to_next_level }}</h2>
+<h2>Level: {{ virtue.level }}</h2>
+<h2>XP: {{ virtue.xp }}</h2>
+<h2>XP to Next Level: {{ virtue.xp_to_next_level }}</h2>
 
 <!-- Topics -->
 <h2>{{ virtue }} Topics</h2>
