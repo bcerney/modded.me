@@ -7,7 +7,7 @@
 
 {% block bootstrap4_content %}
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'dashboard:index' %}">BiggerBoard.digital</a>
+    <a class="navbar-brand" href="{% url 'dashboard:index' %}">Modded.Me</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>      
@@ -15,18 +15,15 @@
         <ul class="navbar-nav mr-auto">
             {% if user.is_authenticated %}
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'dashboard:dashboard' %}">Home</a>
+                <a class="nav-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
             </li>
             {% endif %}
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Apps
-                </a>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Apps</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'get_lucky_draw:home' %}">Get Lucky Draw</a>
                     <a class="dropdown-item" href="{% url 'quotes_app:home' %}">Quote App</a>
-                    <!-- <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a> -->
+                    <a class="dropdown-item" href="{% url 'get_lucky_draw:home' %}">Get Lucky Draw</a>
+                    <!-- <div class="dropdown-divider"></div> -->
                 </div>
             </li>
             {% if user.is_authenticated %}
