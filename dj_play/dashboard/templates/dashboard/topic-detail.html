@@ -6,37 +6,10 @@
 
 {% block content %}
 
-<h2>{{ virtue.title }}</h2>
-<h2>{{ virtue.level }}</h2>
-<h2>{{ virtue.xp }}</h2>
-<h2>{{ virtue.xp_to_next_level }}</h2>
-
-<!-- Topics -->
-<h2>{{ virtue }} Topics</h2>
-<div class="table-responsive">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Title</th>
-        <th scope="col">Description</th>
-        <th scope="col">Created</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for topic in virtue.topics.all %}
-        <tr>
-          <th scope="row"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></th>
-          <td>{{ topic.description }}</td>
-          <td>{{ topic.created }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
-
+<a href="{% url 'dashboard:add-task' %}" class="btn btn-primary">Add Task</a>
 
 <!-- Tasks -->
-<h2>{{ virtue }} Tasks</h2>
+<h2>{{ topic }} Tasks</h2>
 <div class="table-responsive">
     <table class="table">
       <thead>
@@ -49,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for task in virtue.tasks.all %}
+      {% for task in topic.tasks.all %}
           <tr>
             <th scope="row"><a href="{{ task.get_absolute_url }}">{{ task.title }}</a></th>
             <td>{{ task.xp }}</td>

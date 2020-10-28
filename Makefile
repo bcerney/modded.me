@@ -46,10 +46,10 @@ shell: ## Run Django shell
 	./$(DJ_ROOT)/manage.py shell_plus
 
 .PHONY: test
-test: ## Run tests
-	./$(DJ_ROOT)/manage.py migrate
+test: migrate ## Run tests
 	./$(DJ_ROOT)/manage.py test
 
+# Docker
 
 .PHONY: build
 build: ## Run local server
