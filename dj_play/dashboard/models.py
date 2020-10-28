@@ -81,13 +81,12 @@ class Virtue(models.Model):
                     self.xp_to_next_level_constant * self.level_up_xp_modifier
                 )
 
-                self.xp_to_next_level = int(
-                    math.ceil(self.xp_to_next_level_constant)
-                )
+                self.xp_to_next_level = int(math.ceil(self.xp_to_next_level_constant))
 
             # Account for task_xp remainder
             self.xp += task_xp
             self.xp_to_next_level -= task_xp
+            return f"{self.user_profile.user.username} reached Level {self.level} in {self.title}!"
 
     class Meta:
         ordering = ["level"]

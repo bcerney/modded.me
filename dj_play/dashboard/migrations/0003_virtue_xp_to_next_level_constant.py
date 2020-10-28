@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0002_auto_20201028_0120'),
+        ("dashboard", "0002_auto_20201028_0120"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='virtue',
-            name='xp_to_next_level_constant',
+            model_name="virtue",
+            name="xp_to_next_level_constant",
             field=models.FloatField(default=3.0),
         ),
     ]

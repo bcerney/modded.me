@@ -2,6 +2,7 @@ from datetime import datetime
 import math
 from random import choice
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -109,13 +110,24 @@ class CompleteTaskView(LoginRequiredMixin, generic.base.View):
     def get(self, request, *args, **kwargs):
         task = get_object_or_404(Task, pk=kwargs["pk"])
         virtue = task.virtue
-        self.complete_task(task, virtue)
+        msgs = self.complete_task(task, virtue)
+        for message in msgs:
+            messages.success(request, message)
+
         return redirect("dashboard:dashboard")
 
     def complete_task(self, task, virtue):
-        virtue.add_task_xp(task)
+        msgs = []
+        message = virtue.add_task_xp(task)
         virtue.save()
+        msgs.append(message)
 
+        # TODO: move to model method
         task.is_active = False
         task.completed = datetime.now()
         task.save()
+        msgs.append(
+            f"{virtue.user_profile.user.username} gained {task.xp} XP by completing task {task.title}!"
+        )
+
+        return msgs
