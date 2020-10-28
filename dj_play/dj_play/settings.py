@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "bootstrap4",
     # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
     "django_extensions",
+    "docs",
     # DRF tutorial
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     # 'rest_framework',
@@ -157,6 +158,12 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Sphinx docs
+
+DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
+# DOCS_ROOT = BASE_DIR
+DOCS_ACCESS = 'public'
 
 # DRF
 REST_FRAMEWORK = {

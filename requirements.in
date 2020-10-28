@@ -1,5 +1,6 @@
 Django
 django-bootstrap4
+django-docs
 django-environ
 django-extensions
 djangorestframework
@@ -8,4 +9,6 @@ django-taggit-serializer
 
 gunicorn
 psycopg2-binary
+sphinx
+sphinx-rtd-theme
 whitenoise
