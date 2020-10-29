@@ -12,7 +12,7 @@ Modded.Me
 
    modded.me/modded.me.rst
 
-
+`Return to Modded.Me <https://modded.me/>`_
 
 Indices and tables
 ==================
