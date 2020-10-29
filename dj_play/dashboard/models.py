@@ -1,4 +1,5 @@
 import math
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -18,6 +19,8 @@ class UserProfile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    # TODO: allow custom
+    sprint_length_days = models.IntegerField(default=14)
 
     def __str__(self):
         return f"{self.user} Profile"
@@ -34,6 +37,11 @@ def create_user_profile(sender, **kwargs):
         user_profile = UserProfile(user=user)
         user_profile.save()
 
+        sprint = Sprint(
+            user_profile=user_profile,
+            end_date=datetime.now() + timedelta(user_profile.sprint_length_days),
+        )
+        sprint.save()
 
 post_save.connect(create_user_profile, sender=CustomUser)
 
@@ -48,7 +56,7 @@ class Virtue(models.Model):
     title = models.CharField(max_length=100, blank=False)
     description = models.CharField(max_length=200, blank=False)
     level = models.IntegerField(default=1)
-    xp = models.IntegerField(default=0)
+    xp = models.IntegerField(default=1)
     xp_to_next_level = models.IntegerField(default=3)
     xp_to_next_level_constant = models.FloatField(default=3.0)
     level_up_xp_modifier = models.FloatField(default=0.05)
@@ -90,6 +98,20 @@ class Virtue(models.Model):
 
     class Meta:
         ordering = ["level"]
+
+# TODO: move to model save method? best practices?
+def create_sprint_virtue_tally(sender, **kwargs):
+    virtue = kwargs["instance"]
+    if kwargs["created"]:
+        user_profile = virtue.user_profile
+        sprint = Sprint.objects.get(
+            user_profile_id=user_profile.id, is_active=True
+        )
+        sprint_virtue_tally = SprintVirtueTally(sprint=sprint, virtue=virtue)
+        sprint_virtue_tally.save()
+
+
+post_save.connect(create_sprint_virtue_tally, sender=Virtue)
 
 
 class Topic(models.Model):
@@ -138,6 +160,44 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse("dashboard:task-detail", args=[self.id])
+
+    class Meta:
+        ordering = ["created"]
+
+
+class Sprint(models.Model):
+    # TODO: created/updated mixin
+    created = models.DateTimeField(auto_now_add=True)
+    # TODO: caused error, look at change management of objects
+    # updated = models.DateTimeField(auto_now=True)
+    user_profile = models.ForeignKey(
+        "UserProfile",
+        related_name="sprints",
+        on_delete=models.CASCADE,
+    )
+    # TODO: allow custom
+    start_date = models.DateTimeField(auto_now_add=True)
+    # TODO: this should be done at creation using user_profile setting
+    end_date = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    virtue_theme = models.ForeignKey(Virtue, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"Sprint | {self.start_date} - {self.end_date}"
+
+    def get_absolute_url(self):
+        return reverse("dashboard:sprint-detail", args=[self.id])
+
+    class Meta:
+        ordering = ["created"]
+
+
+class SprintVirtueTally(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    virtue = models.ForeignKey(Virtue, on_delete=models.CASCADE)
+    sprint = models.ForeignKey(Sprint, on_delete=models.CASCADE)
+    total_xp = models.IntegerField(default=0)
+    tasks_completed = models.IntegerField(default=0)
 
     class Meta:
         ordering = ["created"]

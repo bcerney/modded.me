@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block title %} {{ sprint }} | Modded.Me{% endblock %}
+
+{% block content %}
+
+<h2>{{ sprint }}</h2>
+
+<p>Start Date: {{ sprint.start_date }}</p>
+<p>End Date: {{ sprint.end_date }}</p>
+<p>Virtue: {{ sprint.virtue_theme.title }}</p>
+
+{% endblock %}

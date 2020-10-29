@@ -6,7 +6,11 @@
 
 {% block content %}
 
-<h3>Welcome, {{ user.username }}!</h3>
+<h1>{{ user.username }}</h1>
+
+{% if sprint %}
+<a href="{% url 'dashboard:sprint-detail' sprint.id %}" class="btn btn-primary">Sprint {{ sprint.start_date|date:'m/d/Y' }} - {{ sprint.end_date|date:'m/d/Y' }}</a>
+{% endif %}
 
 {% if quote %}
 <blockquote class="blockquote text-center">

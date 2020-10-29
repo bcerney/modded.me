@@ -1,5 +1,5 @@
-from datetime import datetime
 import math
+from datetime import datetime
 from random import choice
 
 from django.contrib import messages
@@ -15,7 +15,7 @@ from .forms import (
     TopicCreateForm,
     VirtueCreateForm,
 )
-from .models import Task, Topic, UserProfile, Virtue
+from .models import Sprint, Task, Topic, UserProfile, Virtue, SprintVirtueTally
 
 
 class IndexView(generic.TemplateView):
@@ -50,6 +50,9 @@ class DashboardView(generic.TemplateView):
         virtues = Virtue.objects.filter(user_profile_id=user_profile.id).all()
         context["virtues"] = virtues
 
+        sprint = Sprint.objects.get(user_profile_id=user_profile.id, is_active=True)
+        context["sprint"] = sprint
+
         # TODO: allow for multi-column rows, deal with odd numbers
         # virtues_rows = []
         # for i in range(0, len(virtues), 2):
@@ -63,13 +66,19 @@ class DashboardView(generic.TemplateView):
         return context
 
 
+class SprintDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Sprint
+    template_name = "dashboard/sprint-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(VirtueDetailView, self).get_context_data(**kwargs)
+        # TODO: add more stats via SprintVirtueTally
+        return context
+
 class VirtueDetailView(LoginRequiredMixin, generic.DetailView):
     model = Virtue
     template_name = "dashboard/virtue-detail.html"
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(VirtueDetailView, self).get_context_data(**kwargs)
-    #     return context
 
 
 class VirtueCreateView(LoginRequiredMixin, generic.CreateView):
@@ -109,14 +118,18 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
 class CompleteTaskView(LoginRequiredMixin, generic.base.View):
     def get(self, request, *args, **kwargs):
         task = get_object_or_404(Task, pk=kwargs["pk"])
+        sprint = Sprint.objects.get(
+            user_profile_id=request.user.userprofile.id, is_active=True
+        )
         virtue = task.virtue
-        msgs = self.complete_task(task, virtue)
+
+        msgs = self.complete_task(task, virtue, sprint)
         for message in msgs:
             messages.success(request, message)
 
         return redirect("dashboard:dashboard")
 
-    def complete_task(self, task, virtue):
+    def complete_task(self, task, virtue, sprint):
         msgs = []
         message = virtue.add_task_xp(task)
         virtue.save()
@@ -127,7 +140,12 @@ class CompleteTaskView(LoginRequiredMixin, generic.base.View):
         task.completed = datetime.now()
         task.save()
         msgs.append(
-            f"{virtue.user_profile.user.username} gained {task.xp} XP by completing task {task.title}!"
+            f"{virtue.user_profile.user.username} gained {task.xp} XP  in {virtue.title} by completing task: {task.title}!"
         )
+        # TODO: move to model method
+        virtue_tally = SprintVirtueTally.objects.get(virtue=virtue, sprint=sprint)
+        virtue_tally.total_xp += task.xp
+        virtue_tally.tasks_completed += 1
+        virtue_tally.save()
 
         return msgs
