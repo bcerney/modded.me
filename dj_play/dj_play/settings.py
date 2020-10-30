@@ -161,9 +161,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Sphinx docs
 
-DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
+DOCS_ROOT = os.path.join(BASE_DIR, "../docs/build/html")
 # DOCS_ROOT = BASE_DIR
-DOCS_ACCESS = 'public'
+DOCS_ACCESS = "public"
 
 # DRF
 REST_FRAMEWORK = {
