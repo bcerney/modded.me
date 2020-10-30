@@ -13,7 +13,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-
+  redis:
+    image: "redis:alpine"
   web:
     build: .
     init: true
@@ -25,6 +26,23 @@ services:
       - "80:80"
     depends_on:
       - db
+      - redis
+  celery:
+    build: .
+    command: celery worker -A dj_play --workdir /app/dj_play -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+  celery-beat:
+    build: .
+    command: celery beat -A dj_play --workdir /app/dj_play -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
 
 volumes:
   postgres_data:

@@ -15,6 +15,7 @@ from pathlib import Path
 import environ
 import os
 
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -186,4 +187,58 @@ BOOTSTRAP4 = {
     "required_css_class": "bootstrap4-required",
     "javascript_in_head": True,
     "include_jquery": True,
+}
+
+# TODO: neither works w/ Docker so far, fix
+# https://stackoverflow.com/questions/13366312/django-celery-logging-best-practice
+# https://testdriven.io/blog/django-logging-cloudwatch/
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+             'datefmt': '%y %b %d, %H:%M:%S',
+            },
+        },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'celery': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+            # 'class': 'logging.handlers.RotatingFileHandler',
+            # 'filename': 'celery.log',
+            # 'formatter': 'simple',
+            # 'maxBytes': 1024 * 1024 * 100,  # 100 mb
+        },
+    },
+    'loggers': {
+        'celery': {
+            'handlers': ['celery', 'console'],
+            'level': 'DEBUG',
+        },
+    }
+}
+
+from logging.config import dictConfig
+dictConfig(LOGGING)
+
+# Celery config
+
+# Celery Beat
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'hello': {
+        'task': 'dashboard.tasks.hello',
+        'schedule': crontab()  # execute every minute
+    }
 }

@@ -7,6 +7,7 @@ env=$(ENV)
 
 .PHONY: compile
 compile: ## Compile requirements
+	pip install --upgrade pip
 	pip-compile -U requirements.in
 
 .PHONY: install-dev
@@ -24,9 +25,14 @@ install: ## Install requirements
 black: ## black formatter
 	black .
 
-.PHONY: migrate
-migrate: ## Make and run migrations
+# Django management
+
+.PHONY: makemigrations
+makemigrations: ## Make migrations
 	./$(DJ_ROOT)/manage.py makemigrations
+
+.PHONY: migrate
+migrate: ## Run migrations
 	./$(DJ_ROOT)/manage.py migrate
 
 .PHONY: static

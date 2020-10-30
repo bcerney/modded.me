@@ -7,8 +7,10 @@ djangorestframework
 django-taggit
 django-taggit-serializer
 
+celery<5
 gunicorn
 psycopg2-binary
+redis
 sphinx
 sphinx-rtd-theme
 whitenoise
