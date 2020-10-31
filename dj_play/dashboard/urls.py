@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import include, path, re_path
 
 from . import views
 
@@ -7,6 +7,7 @@ app_name = "dashboard"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("signup/", views.SignUpView.as_view(), name="signup"),
+    re_path(r'^verify/(?P<uuid>[a-z0-9\-]+)/', views.verify, name='verify'),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     # sprint
     path("sprints/<int:pk>/", views.SprintDetailView.as_view(), name="sprint-detail"),

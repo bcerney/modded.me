@@ -31,6 +31,18 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
+# https://code.tutsplus.com/tutorials/using-celery-with-django-for-background-task-processing--cms-28732
+def verify(request, uuid):
+    try:
+        user = CustomUser.objects.get(verification_uuid=uuid, is_verified=False)
+    except User.DoesNotExist:
+        raise Http404("User does not exist or is already verified")
+ 
+    user.is_verified = True
+    user.save()
+ 
+    return redirect('dashboard:dashboard')
+
 
 class DashboardView(generic.TemplateView):
     template_name = "dashboard/dashboard.html"

@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 from django.db import models
 from django.db.models.signals import post_save
 from django.urls import reverse
@@ -10,8 +11,24 @@ from django.urls import reverse
 
 # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class CustomUser(AbstractUser):
-    pass
+    # https://code.tutsplus.com/tutorials/using-celery-with-django-for-background-task-processing--cms-28732
+    is_active = models.BooleanField('active', default=True)
+    is_verified = models.BooleanField('verified', default=False)
+    verification_uuid = models.UUIDField('Unique Verification UUID', default=uuid.uuid4)
 
+def custom_user_post_save(sender, instance, signal, *args, **kwargs):
+    if not instance.is_verified:
+        # Send verification email
+        send_mail(
+            'Verify your Modded.Me account',
+            'Follow this link to verify your account: '
+                'http://localhost:8000%s' % reverse('verify', kwargs={'uuid': str(instance.verification_uuid)}),
+            'from@modded.me',
+            [instance.email],
+            fail_silently=False,
+        )
+# TODO: move to signal
+signals.post_save.connect(custom_user_post_save, sender=CustomUser)
 
 class UserProfile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
