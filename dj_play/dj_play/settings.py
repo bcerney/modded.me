@@ -193,39 +193,40 @@ BOOTSTRAP4 = {
 # https://stackoverflow.com/questions/13366312/django-celery-logging-best-practice
 # https://testdriven.io/blog/django-logging-cloudwatch/
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'simple': {
-            'format': '%(levelname)s %(message)s',
-             'datefmt': '%y %b %d, %H:%M:%S',
-            },
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "simple": {
+            "format": "%(levelname)s %(message)s",
+            "datefmt": "%y %b %d, %H:%M:%S",
         },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
-        'celery': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+        "celery": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple"
             # 'class': 'logging.handlers.RotatingFileHandler',
             # 'filename': 'celery.log',
             # 'formatter': 'simple',
             # 'maxBytes': 1024 * 1024 * 100,  # 100 mb
         },
     },
-    'loggers': {
-        'celery': {
-            'handlers': ['celery', 'console'],
-            'level': 'DEBUG',
+    "loggers": {
+        "celery": {
+            "handlers": ["celery", "console"],
+            "level": "DEBUG",
         },
-    }
+    },
 }
 
 from logging.config import dictConfig
+
 dictConfig(LOGGING)
 
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
@@ -233,6 +234,7 @@ EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = env("EMAIL_PORT")
+
 EMAIL_SITE_DOMAIN = env("EMAIL_SITE_DOMAIN")
 
 # Celery config
@@ -240,12 +242,16 @@ EMAIL_SITE_DOMAIN = env("EMAIL_SITE_DOMAIN")
 # Celery Beat
 CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
-    'hello': {
-        'task': 'dashboard.tasks.hello',
-        'schedule': crontab()  # execute every minute
+    # "hello": {
+    #     "task": "dashboard.tasks.hello",
+    #     "schedule": crontab(),  # execute every minute
+    # }
+    "daily-snapshot": {
+        "task": "dashboard.tasks.send_daily_snapshot_email",
+        "schedule": crontab(),  # execute every minute
     }
 }

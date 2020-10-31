@@ -7,23 +7,25 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0001_initial'),
+        ("dashboard", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customuser',
-            name='is_verified',
-            field=models.BooleanField(default=False, verbose_name='verified'),
+            model_name="customuser",
+            name="is_verified",
+            field=models.BooleanField(default=False, verbose_name="verified"),
         ),
         migrations.AddField(
-            model_name='customuser',
-            name='verification_uuid',
-            field=models.UUIDField(default=uuid.uuid4, verbose_name='Unique Verification UUID'),
+            model_name="customuser",
+            name="verification_uuid",
+            field=models.UUIDField(
+                default=uuid.uuid4, verbose_name="Unique Verification UUID"
+            ),
         ),
         migrations.AlterField(
-            model_name='customuser',
-            name='is_active',
-            field=models.BooleanField(default=True, verbose_name='active'),
+            model_name="customuser",
+            name="is_active",
+            field=models.BooleanField(default=True, verbose_name="active"),
         ),
     ]

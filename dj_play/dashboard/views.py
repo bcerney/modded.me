@@ -3,16 +3,30 @@ from datetime import datetime
 from random import choice
 
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from quotes_app.models import Quote
 
-from .forms import (CustomUserCreationForm, TaskCreateForm, TopicCreateForm,
-                    VirtueCreateForm)
-from .models import (CustomUser, Sprint, SprintVirtueTally, Task, Topic,
-                     UserProfile, Virtue)
+from .forms import (
+    CustomUserCreationForm,
+    TaskCreateForm,
+    TopicCreateForm,
+    VirtueCreateForm,
+)
+from .models import (
+    CustomUser,
+    Sprint,
+    SprintVirtueTally,
+    Task,
+    Topic,
+    UserProfile,
+    Virtue,
+)
+
+from .tasks import send_daily_snapshot_email
 
 
 class IndexView(generic.TemplateView):
@@ -23,10 +37,12 @@ class IndexView(generic.TemplateView):
         return context
 
 
+# TODO: add messages.success on signup
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
+
 
 # https://code.tutsplus.com/tutorials/using-celery-with-django-for-background-task-processing--cms-28732
 def verify(request, uuid):
@@ -34,11 +50,12 @@ def verify(request, uuid):
         user = CustomUser.objects.get(verification_uuid=uuid, is_verified=False)
     except CustomUser.DoesNotExist:
         raise Http404("User does not exist or is already verified")
- 
+
     user.is_verified = True
     user.save()
- 
-    return redirect('login')
+    messages.success(request, f"User {user.username} has been verified")
+
+    return redirect("login")
 
 
 class DashboardView(generic.TemplateView):
@@ -53,6 +70,7 @@ class DashboardView(generic.TemplateView):
         try:
             quote = choice(Quote.objects.filter(user=user))
         except IndexError:
+            # TODO: add default quotes from some default quote user
             quote = None
         context["quote"] = quote
 
@@ -84,10 +102,10 @@ class SprintDetailView(LoginRequiredMixin, generic.DetailView):
         # TODO: add more stats via SprintVirtueTally
         return context
 
+
 class VirtueDetailView(LoginRequiredMixin, generic.DetailView):
     model = Virtue
     template_name = "dashboard/virtue-detail.html"
-
 
 
 class VirtueCreateView(LoginRequiredMixin, generic.CreateView):
@@ -158,3 +176,15 @@ class CompleteTaskView(LoginRequiredMixin, generic.base.View):
         virtue_tally.save()
 
         return msgs
+
+class DailySnapshotView(LoginRequiredMixin, generic.base.View):
+    def get(self, request, *args, **kwargs):
+        UserModel = get_user_model()
+        user = get_object_or_404(UserModel, pk=request.user.id)
+
+        send_daily_snapshot_email.delay(user.id)
+        messages.success(request, f"Daily Snapshot for User {user.username} has been verified")
+
+        return redirect("dashboard:dashboard")
+
+

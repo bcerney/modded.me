@@ -15,25 +15,18 @@ from .tasks import send_verification_email
 # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class CustomUser(AbstractUser):
     # https://code.tutsplus.com/tutorials/using-celery-with-django-for-background-task-processing--cms-28732
-    is_active = models.BooleanField('active', default=True)
-    is_verified = models.BooleanField('verified', default=False)
-    verification_uuid = models.UUIDField('Unique Verification UUID', default=uuid.uuid4)
+    is_verified = models.BooleanField("verified", default=False)
+    verification_uuid = models.UUIDField("Unique Verification UUID", default=uuid.uuid4)
+
 
 def custom_user_post_save(sender, instance, signal, *args, **kwargs):
     if not instance.is_verified:
-        # Send verification email
         send_verification_email.delay(instance.pk)
-        # TODO: improve this once we understand email templating
-        # send_mail(
-        #     'Verify your Modded.Me account',
-        #     'Follow this link to verify your account: '
-        #         'http://0.0.0.0:80%s' % reverse('dashboard:verify', kwargs={'uuid': str(instance.verification_uuid)}),
-        #     'from@modded.me',
-        #     [instance.email],
-        #     fail_silently=False,
-        # )
+
+
 # TODO: move to signal
 post_save.connect(custom_user_post_save, sender=CustomUser)
+
 
 class UserProfile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -64,6 +57,7 @@ def create_user_profile(sender, **kwargs):
             end_date=datetime.now() + timedelta(user_profile.sprint_length_days),
         )
         sprint.save()
+
 
 post_save.connect(create_user_profile, sender=CustomUser)
 
@@ -121,14 +115,13 @@ class Virtue(models.Model):
     class Meta:
         ordering = ["level"]
 
+
 # TODO: move to model save method? best practices?
 def create_sprint_virtue_tally(sender, **kwargs):
     virtue = kwargs["instance"]
     if kwargs["created"]:
         user_profile = virtue.user_profile
-        sprint = Sprint.objects.get(
-            user_profile_id=user_profile.id, is_active=True
-        )
+        sprint = Sprint.objects.get(user_profile_id=user_profile.id, is_active=True)
         sprint_virtue_tally = SprintVirtueTally(sprint=sprint, virtue=virtue)
         sprint_virtue_tally.save()
 

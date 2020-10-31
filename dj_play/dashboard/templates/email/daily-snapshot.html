@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block title %}Dashboard | Modded.Me{% endblock %}
+
+{% block content %}
+
+<h1>{{ user.username }}</h1>
+
+{% if sprint %}
+<a href="{% url 'dashboard:sprint-detail' sprint.id %}" class="btn btn-primary">Sprint {{ sprint.start_date|date:'m/d/Y' }} - {{ sprint.end_date|date:'m/d/Y' }}</a>
+{% endif %}
+
+{% if quote %}
+<blockquote class="blockquote text-center">
+  <p class="mb-0">"{{ quote.text }}"</p>
+  <footer class="blockquote-footer">{{ quote.author }}</footer>
+</blockquote>
+{% endif %}
+
+<a href="{% url 'dashboard:add-virtue' %}" class="btn btn-primary">Add Virtue</a>
+<a href="{% url 'dashboard:add-topic' %}" class="btn btn-primary">Add Topic</a>
+<a href="{% url 'dashboard:add-task' %}" class="btn btn-primary">Add Task</a>
+
+{% if virtues %}
+
+    {% for virtue in virtues %}
+    <div class="row">
+      <div class="col-sm-12 p-2">
+        <div class="card">
+           <div class="card-header">
+             <a href="{% url 'dashboard:virtue-detail' virtue.id %}" class="btn btn-primary">{{ virtue.title }}</a>
+             Level {{ virtue.level }} | {{ virtue.xp }} XP Earned | {{ virtue.xp_to_next_level }} XP to Next Level
+           </div>
+           <div class="card-body">
+             <p class="card-title">{{ virtue.description }}</p>
+
+             {% for topic in virtue.topics.all %}
+             <div class="card">
+              <div class="card-header">
+                <a href="{% url 'dashboard:topic-detail' topic.id %}" class="btn btn-primary">{{ topic }}</a> {{ topic.description }}
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for task in topic.tasks.all %}
+                <li class="list-group-item"><a href="{% url 'dashboard:task-detail' task.id %}" class="badge badge-primary">{{ task.title }}: {{ task.description }} | {{ task.xp }} XP</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+
+           </div>
+         </div>
+       </div>
+     </div>
+     {% endfor %}
+
+{% endif %}
+
+
+{% endblock %}
