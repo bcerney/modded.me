@@ -6,6 +6,11 @@ __pycache__
 # Django
 .env
 
+# Celery
+celery.log
+**/celerybeat-schedule
+**/celerybeat.pid
+
 # Generated
 user-data-test.txt
 

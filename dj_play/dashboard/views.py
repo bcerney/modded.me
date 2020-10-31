@@ -9,13 +9,10 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from quotes_app.models import Quote
 
-from .forms import (
-    CustomUserCreationForm,
-    TaskCreateForm,
-    TopicCreateForm,
-    VirtueCreateForm,
-)
-from .models import Sprint, Task, Topic, UserProfile, Virtue, SprintVirtueTally
+from .forms import (CustomUserCreationForm, TaskCreateForm, TopicCreateForm,
+                    VirtueCreateForm)
+from .models import (CustomUser, Sprint, SprintVirtueTally, Task, Topic,
+                     UserProfile, Virtue)
 
 
 class IndexView(generic.TemplateView):
@@ -35,13 +32,13 @@ class SignUpView(generic.CreateView):
 def verify(request, uuid):
     try:
         user = CustomUser.objects.get(verification_uuid=uuid, is_verified=False)
-    except User.DoesNotExist:
+    except CustomUser.DoesNotExist:
         raise Http404("User does not exist or is already verified")
  
     user.is_verified = True
     user.save()
  
-    return redirect('dashboard:dashboard')
+    return redirect('login')
 
 
 class DashboardView(generic.TemplateView):
@@ -83,7 +80,7 @@ class SprintDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "dashboard/sprint-detail.html"
 
     def get_context_data(self, **kwargs):
-        context = super(VirtueDetailView, self).get_context_data(**kwargs)
+        context = super(SprintDetailView, self).get_context_data(**kwargs)
         # TODO: add more stats via SprintVirtueTally
         return context
 
