@@ -91,12 +91,24 @@ ssh-ec2-user: ## Run local server;TODO: parameterize
 
 .PHONY: deploy-test
 deploy-test: ## Fresh test deploy
-	./scripts/aws-deploy.sh
+	./scripts/aws-deploy-test.sh
 
 .PHONY: deploy-snapshot-test
-deploy-snapshot-test: ## Test deploy using test-latest snapshot
-	./scripts/aws-deploy-snapshot.sh
+deploy-snapshot-test: ## Deploy using test-latest snapshot
+	./scripts/aws-deploy-snapshot-test.sh
 
 .PHONY: snapshot-test
 snapshot-test: ## Create test-latest snapshot
-	./scripts/create-snapshot-test-latest.sh
+	./scripts/create-snapshot-test.sh
+
+.PHONY: deploy-prod
+deploy-prod: ## Fresh prod deploy
+	./scripts/aws-deploy-prod.sh
+
+.PHONY: deploy-snapshot-prod
+deploy-snapshot-prod: ## Deploy using prod snapshot
+	./scripts/aws-deploy-snapshot-prod.sh
+
+.PHONY: snapshot-prod
+snapshot-prod: ## Create prod snapshot
+	./scripts/create-snapshot-prod.sh

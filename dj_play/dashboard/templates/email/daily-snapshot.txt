@@ -1,7 +1,7 @@
 User: {{ user.username }}
 Sprint: {{ sprint.start_date|date:'m/d/Y' }} - {{ sprint.end_date|date:'m/d/Y' }}
 
-{{ quote }}
+"{{ quote.text }}" - {{ quote.author }}
 
 {% for virtue in virtues %}
 {{ virtue.title }}

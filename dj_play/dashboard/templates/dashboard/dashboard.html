@@ -44,7 +44,9 @@
               </div>
               <ul class="list-group list-group-flush">
                 {% for task in topic.tasks.all %}
-                <li class="list-group-item"><a href="{% url 'dashboard:task-detail' task.id %}" class="badge badge-primary">{{ task.title }}: {{ task.description }} | {{ task.xp }} XP</a></li>
+                  {% if not task.completed %}
+                    <li class="list-group-item"><a href="{% url 'dashboard:task-detail' task.id %}" class="badge badge-primary">{{ task.title }}: {{ task.description }} | {{ task.xp }} XP</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </div>
