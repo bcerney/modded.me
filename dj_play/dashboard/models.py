@@ -170,5 +170,8 @@ class SprintVirtueTally(models.Model):
     total_xp = models.IntegerField(default=0)
     tasks_completed = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f"SprintVirtueTally | {self.start_date} - {self.end_date}"
+
     class Meta:
         ordering = ["created"]

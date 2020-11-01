@@ -21,7 +21,7 @@ services:
     build: .
     init: true
     restart: on-failure
-    command: ["./wait-for-it.sh", "db:5432", "--", "make", "gunicorn"]
+    command: ["./scripts/wait-for-it.sh", "db:5432", "--", "make", "gunicorn"]
     volumes:
       - .:/app
     ports:

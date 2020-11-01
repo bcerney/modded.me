@@ -13,13 +13,15 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+
   redis:
     image: "redis:alpine"
+
   web:
     build: .
     init: true
     restart: on-failure
-    command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
+    command: ["./scripts/wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app
     ports:
@@ -27,6 +29,7 @@ services:
     depends_on:
       - db
       - redis
+
   celery:
     build: .
     command: celery worker -A dj_play --workdir /app/dj_play -l info
@@ -35,6 +38,7 @@ services:
     depends_on:
       - db
       - redis
+
   celery-beat:
     build: .
     command: celery beat -A dj_play --workdir /app/dj_play -l info

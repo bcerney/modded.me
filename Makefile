@@ -5,6 +5,10 @@ DJ_ROOT=dj_play
 EC2=ec2-3-237-9-28.compute-1.amazonaws.com
 env=$(ENV)
 
+.PHONY: push
+push: ## Run force-push.sh
+	./scripts/force-push.sh
+
 .PHONY: compile
 compile: ## Compile requirements
 	pip install --upgrade pip
@@ -69,11 +73,15 @@ up: ## Run local server
 up-debug: ## Run local server with Pdb debug access
 	docker-compose -f docker-compose.dev.yml run --service-ports web
 
-.PHONY: up
+.PHONY: logs
+logs: ## Run local server
+	docker-compose -f docker-compose.$(env).yml logs
+
+.PHONY: down
 down: ## Run local server
 	docker-compose -f docker-compose.$(env).yml down
 
-.PHONY: up
+.PHONY: exec
 exec: ## Run local server
 	docker-compose -f docker-compose.$(env).yml exec web bash
 
@@ -81,4 +89,14 @@ exec: ## Run local server
 ssh-ec2-user: ## Run local server;TODO: parameterize
 	ssh -i ~/.ssh/dj-play.pem ec2-user@$(EC2)
 
-# TODO: add make snapshot-test, make snapshot-prod
+.PHONY: deploy-test
+deploy-test: ## Fresh test deploy
+	./scripts/aws-deploy.sh
+
+.PHONY: deploy-snapshot-test
+deploy-snapshot-test: ## Test deploy using test-latest snapshot
+	./scripts/aws-deploy-snapshot.sh
+
+.PHONY: snapshot-test
+snapshot-test: ## Create test-latest snapshot
+	./scripts/create-snapshot-test-latest.sh

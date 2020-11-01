@@ -245,9 +245,10 @@ CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+# https://docs.celeryproject.org/en/master/userguide/periodic-tasks.html#crontab-schedules
 CELERY_BEAT_SCHEDULE = {
-    # "daily-snapshot": {
-    #     "task": "dashboard.tasks.daily_snapshot_email_all_users",
-    #     "schedule": crontab(),  # execute every minute
-    # }
+    "daily-snapshot": {
+        "task": "dashboard.tasks.daily_snapshot_email_all_users",
+        "schedule": crontab(minute='*/15'),  # execute every 15 minutes
+    }
 }

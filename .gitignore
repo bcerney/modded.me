@@ -12,7 +12,7 @@ celery.log
 **/celerybeat.pid
 
 # Generated
-user-data-test.txt
+scripts/user-data-test.txt
 
 # IDE
 .vscode
