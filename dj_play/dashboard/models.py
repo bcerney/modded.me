@@ -1,16 +1,18 @@
 import math
+import uuid
 from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
 from django.urls import reverse
 
 
 # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class CustomUser(AbstractUser):
-    pass
+    # https://code.tutsplus.com/tutorials/using-celery-with-django-for-background-task-processing--cms-28732
+    is_verified = models.BooleanField("verified", default=False)
+    verification_uuid = models.UUIDField("Unique Verification UUID", default=uuid.uuid4)
 
 
 class UserProfile(models.Model):
@@ -27,23 +29,6 @@ class UserProfile(models.Model):
 
     class Meta:
         ordering = ["created"]
-
-
-# TODO: move to signals.py file
-# https://blog.khophi.co/extending-django-user-model-userprofile-like-a-pro/
-def create_user_profile(sender, **kwargs):
-    user = kwargs["instance"]
-    if kwargs["created"]:
-        user_profile = UserProfile(user=user)
-        user_profile.save()
-
-        sprint = Sprint(
-            user_profile=user_profile,
-            end_date=datetime.now() + timedelta(user_profile.sprint_length_days),
-        )
-        sprint.save()
-
-post_save.connect(create_user_profile, sender=CustomUser)
 
 
 class Virtue(models.Model):
@@ -98,20 +83,6 @@ class Virtue(models.Model):
 
     class Meta:
         ordering = ["level"]
-
-# TODO: move to model save method? best practices?
-def create_sprint_virtue_tally(sender, **kwargs):
-    virtue = kwargs["instance"]
-    if kwargs["created"]:
-        user_profile = virtue.user_profile
-        sprint = Sprint.objects.get(
-            user_profile_id=user_profile.id, is_active=True
-        )
-        sprint_virtue_tally = SprintVirtueTally(sprint=sprint, virtue=virtue)
-        sprint_virtue_tally.save()
-
-
-post_save.connect(create_sprint_virtue_tally, sender=Virtue)
 
 
 class Topic(models.Model):
@@ -198,6 +169,9 @@ class SprintVirtueTally(models.Model):
     sprint = models.ForeignKey(Sprint, on_delete=models.CASCADE)
     total_xp = models.IntegerField(default=0)
     tasks_completed = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"SprintVirtueTally | {self.start_date} - {self.end_date}"
 
     class Meta:
         ordering = ["created"]

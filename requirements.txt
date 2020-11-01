@@ -5,9 +5,12 @@
 #    pip-compile requirements.in
 #
 alabaster==0.7.12         # via sphinx
+amqp==2.6.1               # via kombu
 asgiref==3.2.10           # via django
 babel==2.8.0              # via sphinx
 beautifulsoup4==4.9.3     # via django-bootstrap4
+billiard==3.6.3.0         # via celery
+celery==4.4.7             # via -r requirements.in
 certifi==2020.6.20        # via requests
 chardet==3.0.4            # via requests
 django-bootstrap4==2.3.1  # via -r requirements.in
@@ -22,14 +25,16 @@ docutils==0.16            # via sphinx
 gunicorn==20.0.4          # via -r requirements.in
 idna==2.10                # via requests
 imagesize==1.2.0          # via sphinx
-importlib-metadata==2.0.0  # via django-bootstrap4
+importlib-metadata==2.0.0  # via django-bootstrap4, kombu
 jinja2==2.11.2            # via sphinx
+kombu==4.6.11             # via celery
 markupsafe==1.1.1         # via jinja2
 packaging==20.4           # via sphinx
 psycopg2-binary==2.8.6    # via -r requirements.in
 pygments==2.7.2           # via sphinx
 pyparsing==2.4.7          # via packaging
-pytz==2020.1              # via babel, django
+pytz==2020.1              # via babel, celery, django
+redis==3.5.3              # via -r requirements.in
 requests==2.24.0          # via sphinx
 six==1.15.0               # via django-taggit-serializer, packaging
 snowballstemmer==2.0.0    # via sphinx
@@ -44,6 +49,7 @@ sphinxcontrib-qthelp==1.0.3  # via sphinx
 sphinxcontrib-serializinghtml==1.1.4  # via sphinx
 sqlparse==0.4.1           # via django
 urllib3==1.25.11          # via requests
+vine==1.3.0               # via amqp, celery
 whitenoise==5.2.0         # via -r requirements.in
 zipp==3.4.0               # via importlib-metadata
 

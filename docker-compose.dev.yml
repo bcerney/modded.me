@@ -14,17 +14,39 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  redis:
+    image: "redis:alpine"
+
   web:
     build: .
     init: true
     restart: on-failure
-    command: ["./wait-for-it.sh", "db:5432", "--", "make", "runserver"]
+    command: ["./scripts/wait-for-it.sh", "db:5432", "--", "make", "runserver"]
     volumes:
       - .:/app
     ports:
       - "80:80"
     depends_on:
       - db
+      - redis
+
+  celery:
+    build: .
+    command: celery worker -A dj_play --workdir /app/dj_play -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery beat -A dj_play --workdir /app/dj_play -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
 
 volumes:
   postgres_data:

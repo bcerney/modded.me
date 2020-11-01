@@ -15,7 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-mkfs -t xfs /dev/sdb
+# mkfs -t xfs /dev/sdb
 mkdir /data
 mount /dev/sdb /data
 lsblk
@@ -47,10 +47,22 @@ cd dj_play/dj_play/
 
 SECRET_KEY=$(aws ssm get-parameters --names "/test/secret-key" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 DATABASE_URL=$(aws ssm get-parameters --names "/test/database-url" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+EMAIL_HOST_PASSWORD=$(aws ssm get-parameters --names "/test/email-host-password" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
+
 
 cat > .env <<EOL
 SECRET_KEY=${SECRET_KEY}
 DATABASE_URL=${DATABASE_URL}
+
+EMAIL_USE_TLS=True
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='brianecerney@gmail.com'
+EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+EMAIL_PORT=587
+EMAIL_SITE_DOMAIN=modded.me
+
+CELERY_BROKER_URL='redis://redis:6379'
+CELERY_RESULT_BACKEND='redis://redis:6379'
 
 EOL
 
