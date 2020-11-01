@@ -7,12 +7,14 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 
-from .models import Sprint, SprintVirtueTally UserProfile, CustomUser
+from .models import CustomUser, Sprint, SprintVirtueTally, UserProfile, Virtue
+from .tasks import send_verification_email
 
 
-# https://blog.khophi.co/extending-django-user-model-userprofile-like-a-pro/
+@receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, **kwargs):
     user = kwargs["instance"]
     if kwargs["created"]:
@@ -25,19 +27,15 @@ def create_user_profile(sender, **kwargs):
         )
         sprint.save()
 
-post_save.connect(create_user_profile, sender=CustomUser)
 
-
+@receiver(post_save, sender=CustomUser)
 def custom_user_post_save(sender, instance, signal, *args, **kwargs):
     if not instance.is_verified:
-        celery_tasks.send_verification_email.delay(instance.pk)
-
-
-# TODO: move to signal
-post_save.connect(custom_user_post_save, sender=CustomUser)
+        send_verification_email.delay(instance.pk)
 
 
 # TODO: move to model save method? best practices?
+@receiver(post_save, sender=Virtue)
 def create_sprint_virtue_tally(sender, **kwargs):
     virtue = kwargs["instance"]
     if kwargs["created"]:
@@ -45,5 +43,3 @@ def create_sprint_virtue_tally(sender, **kwargs):
         sprint = Sprint.objects.get(user_profile_id=user_profile.id, is_active=True)
         sprint_virtue_tally = SprintVirtueTally(sprint=sprint, virtue=virtue)
         sprint_virtue_tally.save()
-
-post_save.connect(create_sprint_virtue_tally, sender=Virtue)

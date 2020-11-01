@@ -9,12 +9,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+from django.template.loader import render_to_string
+
 from quotes_app.models import Quote
 
-from .forms import (CustomUserCreationForm, TaskCreateForm, TopicCreateForm,
-                    VirtueCreateForm)
-from .models import (CustomUser, Sprint, SprintVirtueTally, Task, Topic,
-                     UserProfile, Virtue)
+from .forms import (
+    CustomUserCreationForm,
+    TaskCreateForm,
+    TopicCreateForm,
+    VirtueCreateForm,
+)
+from .models import (
+    CustomUser,
+    Sprint,
+    SprintVirtueTally,
+    Task,
+    Topic,
+    UserProfile,
+    Virtue,
+)
 from .tasks import send_daily_snapshot_email
 
 
@@ -42,7 +55,7 @@ def verify(request, uuid):
 
     user.is_verified = True
     user.save()
-    messages.success(request, f"Daily Snapshot for {user.username} has been sent")
+    messages.success(request, f"User {user.username} has been verified")
 
     return redirect("login")
 
@@ -166,14 +179,15 @@ class CompleteTaskView(LoginRequiredMixin, generic.base.View):
 
         return msgs
 
+
 class DailySnapshotView(LoginRequiredMixin, generic.base.View):
     def get(self, request, *args, **kwargs):
         UserModel = get_user_model()
         user = get_object_or_404(UserModel, pk=request.user.id)
 
         send_daily_snapshot_email.delay(user.id)
-        messages.success(request, f"Daily Snapshot for User {user.username} has been sent")
+        messages.success(
+            request, f"Daily Snapshot for User {user.username} has been sent"
+        )
 
         return redirect("dashboard:dashboard")
-
-

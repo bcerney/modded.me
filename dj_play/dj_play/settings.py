@@ -246,12 +246,8 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
-    # "hello": {
-    #     "task": "dashboard.tasks.hello",
-    #     "schedule": crontab(),  # execute every minute
-    # }
     # "daily-snapshot": {
-    #     "task": "dashboard.tasks.send_daily_snapshot_email",
+    #     "task": "dashboard.tasks.daily_snapshot_email_all_users",
     #     "schedule": crontab(),  # execute every minute
     # }
 }
