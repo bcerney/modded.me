@@ -250,8 +250,8 @@ CELERY_BEAT_SCHEDULE = {
     #     "task": "dashboard.tasks.hello",
     #     "schedule": crontab(),  # execute every minute
     # }
-    "daily-snapshot": {
-        "task": "dashboard.tasks.send_daily_snapshot_email",
-        "schedule": crontab(),  # execute every minute
-    }
+    # "daily-snapshot": {
+    #     "task": "dashboard.tasks.send_daily_snapshot_email",
+    #     "schedule": crontab(),  # execute every minute
+    # }
 }

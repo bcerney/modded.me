@@ -1,14 +1,17 @@
 import logging
+from random import choice
 
 from celery import shared_task
+from dj_play.celery import app
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
+from quotes_app.models import Quote
 
-from dj_play.celery import app
+from .models import Sprint, Virtue
 
 
 # @shared_task
@@ -19,7 +22,7 @@ from dj_play.celery import app
 # TODO: better understand shared vs app task
 @app.task
 def send_verification_email(user_id):
-    UserModel = get_user_model()
+    UserModel = settings.AUTH_USER_MODEL
     try:
         user = UserModel.objects.get(pk=user_id)
         send_mail(
@@ -57,8 +60,9 @@ def send_daily_snapshot_email(user_id):
         sprint = Sprint.objects.get(user_profile_id=user_profile.id, is_active=True)
         context["sprint"] = sprint
 
-        msg_txt = render_to_string('dashboard/email/daily-snapshot.txt', context)
-        msg_html = render_to_string('dashboard/dashboard.html', context)
+        msg_txt = render_to_string('email/daily-snapshot.txt', context)
+        # TODO: solve bootstrap in email issue
+        # msg_html = render_to_string('dashboard/dashboard.html', context)
 
         send_mail(
             # TODO: generate date, add to email title
@@ -66,7 +70,7 @@ def send_daily_snapshot_email(user_id):
             msg_txt,
             "from@modded.me",
             [user.email],
-            html_message=msg_html,
+            # html_message=msg_html,
             fail_silently=False,
         )
     except UserModel.DoesNotExist:

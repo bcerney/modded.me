@@ -2,6 +2,7 @@ import math
 from datetime import datetime
 from random import choice
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,22 +11,10 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from quotes_app.models import Quote
 
-from .forms import (
-    CustomUserCreationForm,
-    TaskCreateForm,
-    TopicCreateForm,
-    VirtueCreateForm,
-)
-from .models import (
-    CustomUser,
-    Sprint,
-    SprintVirtueTally,
-    Task,
-    Topic,
-    UserProfile,
-    Virtue,
-)
-
+from .forms import (CustomUserCreationForm, TaskCreateForm, TopicCreateForm,
+                    VirtueCreateForm)
+from .models import (CustomUser, Sprint, SprintVirtueTally, Task, Topic,
+                     UserProfile, Virtue)
 from .tasks import send_daily_snapshot_email
 
 
@@ -49,11 +38,11 @@ def verify(request, uuid):
     try:
         user = CustomUser.objects.get(verification_uuid=uuid, is_verified=False)
     except CustomUser.DoesNotExist:
-        raise Http404("User does not exist or is already verified")
+        raise Http404("User does not exist")
 
     user.is_verified = True
     user.save()
-    messages.success(request, f"User {user.username} has been verified")
+    messages.success(request, f"Daily Snapshot for {user.username} has been sent")
 
     return redirect("login")
 
@@ -183,7 +172,7 @@ class DailySnapshotView(LoginRequiredMixin, generic.base.View):
         user = get_object_or_404(UserModel, pk=request.user.id)
 
         send_daily_snapshot_email.delay(user.id)
-        messages.success(request, f"Daily Snapshot for User {user.username} has been verified")
+        messages.success(request, f"Daily Snapshot for User {user.username} has been sent")
 
         return redirect("dashboard:dashboard")
 
