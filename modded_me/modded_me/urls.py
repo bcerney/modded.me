@@ -1,4 +1,4 @@
-"""dj_play URL Configuration
+"""modded_me URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -20,7 +20,6 @@ urlpatterns = [
     path("aquaman/", admin.site.urls),
     path("", include("dashboard.urls")),
     path("quotes/", include("quotes_app.urls")),
-    path("getlucky/", include("get_lucky_draw.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     re_path(r"^docs/", include("docs.urls")),
     # path('', include('quotes_api.urls')),

@@ -10,7 +10,7 @@ Modded.Me
    :maxdepth: 2
    :caption: Table of Contents:
 
-   modded.me/modded.me.rst
+   modded_me/modded_me.rst
 
 `Return to Modded.Me <https://modded.me/>`_
 

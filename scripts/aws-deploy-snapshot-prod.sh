@@ -30,4 +30,4 @@ aws ec2 associate-address \
   --allocation-id $EIP_ALLOC \
   --instance-id $INSTANCE_ID
 
-./scripts/wait-for-it.sh www.modded.me:80 -- echo "Modded.Me is UP"
+./scripts/wait-for-it.sh www.modded_me:80 -- echo "modded_me is UP"

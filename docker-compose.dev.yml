@@ -32,7 +32,7 @@ services:
 
   celery:
     build: .
-    command: celery worker -A dj_play --workdir /app/dj_play -l info
+    command: celery worker -A modded_me --workdir /app/modded_me -l info
     volumes:
       - .:/app
     depends_on:
@@ -41,7 +41,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery beat -A dj_play --workdir /app/dj_play -l info
+    command: celery beat -A modded_me --workdir /app/modded_me -l info
     volumes:
       - .:/app
     depends_on:

@@ -15,7 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-# mkfs -t xfs /dev/sdb
+mkfs -t xfs /dev/sdb
 mkdir /data
 mount /dev/sdb /data
 lsblk
@@ -23,8 +23,8 @@ mkdir -p /data/postgres_data
 
 GITLAB_TOKEN=$(aws ssm get-parameters --names "gitlab-api-token" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 
-git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/bcerney/django-playground.git
-cd django-playground
+git clone https://github.com/bcerney/modded.me.git
+cd modded.me/
 git checkout master
 
 POSTGRES_DB=$(aws ssm get-parameters --names "/test/postgres-db" --query Parameters[*].Value --region us-east-1 --output text)
@@ -40,7 +40,7 @@ POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 EOL
 
-cd dj_play/dj_play/
+cd modded_me/modded_me/
 
 SECRET_KEY=$(aws ssm get-parameters --names "/test/secret-key" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
 DATABASE_URL=$(aws ssm get-parameters --names "/test/database-url" --with-decryption --query Parameters[*].Value --region us-east-1 --output text)
@@ -56,7 +56,7 @@ EMAIL_HOST='smtp.gmail.com'
 EMAIL_HOST_USER='brianecerney@gmail.com'
 EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
 EMAIL_PORT=587
-EMAIL_SITE_DOMAIN=modded.me
+EMAIL_SITE_DOMAIN=modded_me
 
 CELERY_BROKER_URL='redis://redis:6379'
 CELERY_RESULT_BACKEND='redis://redis:6379'
