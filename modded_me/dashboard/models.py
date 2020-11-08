@@ -7,6 +7,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 
+from quotes_app.models import Quote
+# from manna.models import MannaProfile
 
 # https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class CustomUser(AbstractUser):
@@ -19,6 +21,10 @@ class UserProfile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    manna_profile = models.ForeignKey(
+        "MannaProfile",
         on_delete=models.CASCADE,
     )
     # TODO: allow custom

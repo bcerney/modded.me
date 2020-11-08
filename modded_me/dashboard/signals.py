@@ -10,6 +10,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
+from manna.models import Journal, MannaProfile
+
 from .models import CustomUser, Sprint, SprintVirtueTally, UserProfile, Virtue
 from .tasks import send_verification_email
 
@@ -18,7 +20,12 @@ from .tasks import send_verification_email
 def create_user_profile(sender, **kwargs):
     user = kwargs["instance"]
     if kwargs["created"]:
-        user_profile = UserProfile(user=user)
+        # setup MannaProfile
+        meditate_journal = Journal(title="Meditation Journal")
+        manna_profile = MannaProfile(journals=[meditate_journal])
+        manna_profile.save()
+        #setup UserProfile
+        user_profile = UserProfile(user=user, manna_profile=manna_profile)
         user_profile.save()
 
         sprint = Sprint(
