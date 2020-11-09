@@ -2,7 +2,7 @@ import logging
 from random import choice
 
 from celery import group, shared_task
-from dj_play.celery import app
+from modded_me.celery import app
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -21,10 +21,10 @@ def send_verification_email(user_id):
     try:
         user = UserModel.objects.get(pk=user_id)
         send_mail(
-            "Verify your Modded.Me account",
+            "Verify your modded_me account",
             "Follow this link to verify your account: "
             f"http://{settings.EMAIL_SITE_DOMAIN}{reverse('dashboard:verify', kwargs={'uuid': str(user.verification_uuid)})}",
-            "from@modded.me",
+            "from@modded_me",
             [user.email],
             fail_silently=False,
         )
@@ -62,9 +62,9 @@ def send_daily_snapshot_email(user_id):
 
         send_mail(
             # TODO: generate date, add to email title
-            "Modded.Me Daily Snapshot",
+            "modded_me Daily Snapshot",
             msg_txt,
-            "from@modded.me",
+            "from@modded_me",
             [user.email],
             # html_message=msg_html,
             fail_silently=False,

@@ -1,7 +1,7 @@
 # https://www.freecodecamp.org/news/django-project-best-practices-for-happy-developers/
 
 # TODO: any need to dynamically determine root?
-DJ_ROOT=dj_play
+DJ_ROOT=modded_me
 EC2=ec2-3-237-9-28.compute-1.amazonaws.com
 env=$(ENV)
 
@@ -49,7 +49,7 @@ runserver: migrate ## Run Django server
 
 .PHONY: gunicorn
 gunicorn: migrate ## Run Django server
-	cd $(DJ_ROOT) && gunicorn --bind 0.0.0.0:80 dj_play.wsgi:application
+	cd $(DJ_ROOT) && gunicorn --bind 0.0.0.0:80 modded_me.wsgi:application
 
 .PHONY: shell
 shell: ## Run Django shell

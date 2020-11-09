@@ -1,12 +1,12 @@
-# django-playground
+# modded_me
 
 python3 -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
 
-django-admin startproject dj_play
-cd dj_play/
+django-admin startproject modded_me
+cd modded_me/
 ./manage.py startapp quotes_api
 
 ./manage.py makemigrations quotes_api
