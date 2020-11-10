@@ -21,10 +21,10 @@ def send_verification_email(user_id):
     try:
         user = UserModel.objects.get(pk=user_id)
         send_mail(
-            "Verify your modded_me account",
+            "Verify your Modded.Me account",
             "Follow this link to verify your account: "
             f"http://{settings.EMAIL_SITE_DOMAIN}{reverse('dashboard:verify', kwargs={'uuid': str(user.verification_uuid)})}",
-            "from@modded_me",
+            "from@Modded.Me",
             [user.email],
             fail_silently=False,
         )
@@ -62,9 +62,9 @@ def send_daily_snapshot_email(user_id):
 
         send_mail(
             # TODO: generate date, add to email title
-            "modded_me Daily Snapshot",
+            "Modded.Me Daily Snapshot",
             msg_txt,
-            "from@modded_me",
+            "from@Modded.Me",
             [user.email],
             # html_message=msg_html,
             fail_silently=False,

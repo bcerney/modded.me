@@ -30,6 +30,7 @@ def create_user_profile(sender, **kwargs):
 
 @receiver(post_save, sender=CustomUser)
 def custom_user_post_save(sender, instance, signal, *args, **kwargs):
+    # TODO: this sends the email on every form save, annoying
     if not instance.is_verified:
         send_verification_email.delay(instance.pk)
 
