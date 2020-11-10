@@ -15,7 +15,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # TODO handle /etc/fstab update to mount on reboot
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 # TODO: don't want to reformt w/ snapshots, need to check?
-mkfs -t xfs /dev/sdb
+# mkfs -t xfs /dev/sdb
 mkdir /data
 mount /dev/sdb /data
 lsblk
@@ -59,7 +59,7 @@ EMAIL_HOST='smtp.gmail.com'
 EMAIL_HOST_USER='brianecerney@gmail.com'
 EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
 EMAIL_PORT=587
-EMAIL_SITE_DOMAIN=modded_me
+EMAIL_SITE_DOMAIN=modded.me
 
 CELERY_BROKER_URL='redis://redis:6379'
 CELERY_RESULT_BACKEND='redis://redis:6379'

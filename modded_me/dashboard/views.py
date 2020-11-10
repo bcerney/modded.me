@@ -114,6 +114,11 @@ class VirtueCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = VirtueCreateForm
     template_name = "dashboard/add-virtue.html"
 
+    def form_valid(self, form):
+        form.instance.user_profile = self.request.user.userprofile
+        form.save()
+        return super(VirtueCreateView, self).form_valid(form)
+
     def get_success_url(self):
         return reverse("dashboard:dashboard")
 
@@ -126,6 +131,11 @@ class TopicDetailView(LoginRequiredMixin, generic.DetailView):
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = TopicCreateForm
     template_name = "dashboard/add-topic.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(TopicCreateView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     # def get_success_url(self):
     #     return reverse('dashboard:dashboard')
@@ -140,8 +150,10 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = TaskCreateForm
     template_name = "dashboard/add-task.html"
 
-    # def get_success_url(self):
-    #     return reverse('dashboard:dashboard')
+    def get_form_kwargs(self):
+        kwargs = super(TaskCreateView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class CompleteTaskView(LoginRequiredMixin, generic.base.View):

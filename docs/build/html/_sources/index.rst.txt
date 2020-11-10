@@ -1,18 +1,18 @@
-.. modded_me documentation master file, created by
+.. Modded.Me documentation master file, created by
    sphinx-quickstart on Wed Oct 28 14:27:22 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-modded_me
+Modded.Me
 =====================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Table of Contents:
 
-   modded_me/modded_me.rst
+   modded.me/Modded.Me.rst
 
-`Return to modded_me <https://modded_me/>`_
+`Return to Modded.Me <https://modded.me/>`_
 
 Indices and tables
 ==================
