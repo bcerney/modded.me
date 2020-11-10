@@ -101,10 +101,6 @@ deploy-snapshot-test: ## Deploy using test-latest snapshot
 snapshot-test: ## Create test-latest snapshot
 	./scripts/create-snapshot-test.sh
 
-.PHONY: deploy-prod
-deploy-prod: ## Fresh prod deploy
-	./scripts/aws-deploy-prod.sh
-
 .PHONY: deploy-snapshot-prod
 deploy-snapshot-prod: ## Deploy using prod snapshot
 	./scripts/aws-deploy-snapshot-prod.sh
