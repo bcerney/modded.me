@@ -4,11 +4,8 @@ set -xe
 
 cp scripts/user-data-prod.example scripts/user-data-prod.txt
 
-# CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-# sed -i "s/BRANCH_TO_CHECKOUT/$CURRENT_BRANCH/" scripts/user-data-prod.txt
-
-# Get test-latest EBS SnapshotId 
-SNAPSHOT_ID=$(aws ec2 describe-snapshots --filters Name=tag:Env,Values=test-latest --query "Snapshots[*].[SnapshotId]" --output text)
+# Get prod EBS SnapshotId
+SNAPSHOT_ID=$(aws ec2 describe-snapshots --filters Name=tag:Env,Values=prod --query "Snapshots[*].[SnapshotId]" --output text)
 
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
 INSTANCE_ID=$(aws ec2 run-instances \
@@ -16,7 +13,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
   --block-device-mappings \
   "DeviceName=/dev/sdb,Ebs={DeleteOnTermination=true,SnapshotId=$SNAPSHOT_ID,VolumeSize=20,VolumeType=gp2}" \
   --user-data file://scripts/user-data-prod.txt \
-  --tag-specifications 'ResourceType=instance,Tags=[{Key=Env,Value=test-latest}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Env,Value=prod}]' \
   --query "Instances[*].[InstanceId]" \
   --output text)
 
