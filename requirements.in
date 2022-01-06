@@ -7,7 +7,7 @@ djangorestframework
 django-taggit
 django-taggit-serializer
 
-celery<5
+celery<6
 gunicorn
 psycopg2-binary
 redis
